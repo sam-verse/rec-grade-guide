@@ -19,26 +19,88 @@ const EndSemCalculator: React.FC<EndSemCalculatorProps> = ({ onBack }) => {
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
   const [step, setStep] = useState(1);
+  const [practicalMark, setPracticalMark] = useState('');
+  const [nptelMark, setNptelMark] = useState('');
+  const [labInternal, setLabInternal] = useState('');
+  const [labExternal, setLabExternal] = useState('');
 
   const handleCalculateInternal = () => {
-    if (!subjectName || !internal1 || !internal2 || !assignment) {
-      setToastMessage('Please fill all required fields');
+    if (!subjectName) {
+      setToastMessage('Please enter subject name');
       setShowToast(true);
       return;
     }
 
-    const int1 = parseFloat(internal1);
-    const int2 = parseFloat(internal2);
-    const assign = parseFloat(assignment);
+    switch (courseType) {
+      case 'theory':
+        if (!internal1 || !internal2 || !assignment) {
+          setToastMessage('Please fill all required fields');
+          setShowToast(true);
+          return;
+        }
+        const int1 = parseFloat(internal1);
+        const int2 = parseFloat(internal2);
+        const assign = parseFloat(assignment);
+        if (int1 > 75 || int2 > 75 || assign > 50) {
+          setToastMessage('Please enter valid marks (Internal: 0-75, Assignment: 0-50)');
+          setShowToast(true);
+          return;
+        }
+        const internal = calculateInternalMark(int1, int2, assign, courseType, 0, 0);
+        setInternalMark(internal);
+        break;
 
-    if (int1 > 75 || int2 > 75 || assign > 50) {
-      setToastMessage('Please enter valid marks (Internal: 0-75, Assignment: 0-50)');
-      setShowToast(true);
-      return;
+      case 'theoryCumLab':
+        if (!internal1 || !internal2 || !assignment || !practicalMark) {
+          setToastMessage('Please fill all required fields');
+          setShowToast(true);
+          return;
+        }
+        const int1Lab = parseFloat(internal1);
+        const int2Lab = parseFloat(internal2);
+        const assignLab = parseFloat(assignment);
+        const pracMark = parseFloat(practicalMark);
+        if (int1Lab > 75 || int2Lab > 75 || assignLab > 50 || pracMark > 50) {
+          setToastMessage('Please enter valid marks (Internal: 0-75, Assignment: 0-50, Practical: 0-50)');
+          setShowToast(true);
+          return;
+        }
+        const internalLab = ((int1Lab + int2Lab + assignLab) / 8) + (pracMark / 2);
+        setInternalMark(internalLab);
+        break;
+
+      case 'nptel':
+        if (!nptelMark) {
+          setToastMessage('Please enter NPTEL mark');
+          setShowToast(true);
+          return;
+        }
+        const nptel = parseFloat(nptelMark);
+        if (nptel > 100) {
+          setToastMessage('Please enter valid mark (0-100)');
+          setShowToast(true);
+          return;
+        }
+        setInternalMark(nptel);
+        break;
+
+      case 'lab':
+        if (!labInternal || !labExternal) {
+          setToastMessage('Please fill all required fields');
+          setShowToast(true);
+          return;
+        }
+        const labInt = parseFloat(labInternal);
+        const labExt = parseFloat(labExternal);
+        if (labInt > 25 || labExt > 75) {
+          setToastMessage('Please enter valid marks (Internal: 0-25, External: 0-75)');
+          setShowToast(true);
+          return;
+        }
+        const labTotal = labInt + labExt;
+        setInternalMark(labTotal);
+        break;
     }
-
-    const internal = calculateInternalMark(int1, int2, assign, courseType, 0, 0);
-    setInternalMark(internal);
     setStep(2);
   };
 
@@ -61,14 +123,22 @@ const EndSemCalculator: React.FC<EndSemCalculatorProps> = ({ onBack }) => {
     }
 
     if (internalMark !== null) {
-      const required = calculateRequiredEndSemMark(internalMark, minGrade, courseType);
+      let required = 0;
+      
+      if (courseType === 'nptel') {
+        required = minGrade;
+      } else if (courseType === 'lab') {
+        required = minGrade - internalMark;
+      } else {
+        required = calculateRequiredEndSemMark(internalMark, minGrade, courseType);
+      }
       
       if (required > 100) {
         setToastMessage('You cannot achieve this grade. Please choose a lower grade.');
         setShowToast(true);
         setRequiredMark(null);
       } else {
-        setRequiredMark(Math.ceil(required));
+        setRequiredMark(Math.max(51, Math.ceil(required)));
       }
     }
   };
@@ -95,7 +165,7 @@ const EndSemCalculator: React.FC<EndSemCalculatorProps> = ({ onBack }) => {
 
         <div className="bg-white rounded-lg shadow-md p-6">
           <h2 className="text-2xl font-bold text-blue-900 mb-6">
-            End Sem Mark Calculator
+            End Sem Subject Mark Calculator
           </h2>
 
           {step === 1 && (
@@ -116,77 +186,185 @@ const EndSemCalculator: React.FC<EndSemCalculatorProps> = ({ onBack }) => {
                 </div>
 
                 <div>
-                  <label htmlFor="internal1" className="block text-sm font-medium text-gray-700">
-                    Internal 1 (out of 75)
-                  </label>
-                  <input
-                    type="number"
-                    id="internal1"
-                    value={internal1}
-                    onChange={(e) => setInternal1(e.target.value)}
-                    min="0"
-                    max="75"
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="internal2" className="block text-sm font-medium text-gray-700">
-                    Internal 2 (out of 75)
-                  </label>
-                  <input
-                    type="number"
-                    id="internal2"
-                    value={internal2}
-                    onChange={(e) => setInternal2(e.target.value)}
-                    min="0"
-                    max="75"
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="assignment" className="block text-sm font-medium text-gray-700">
-                    Assignment (out of 50)
-                  </label>
-                  <input
-                    type="number"
-                    id="assignment"
-                    value={assignment}
-                    onChange={(e) => setAssignment(e.target.value)}
-                    min="0"
-                    max="50"
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="courseType" className="block text-sm font-medium text-gray-700 mb-2">
                     Course Type
                   </label>
-                  <div className="flex space-x-4">
-                    <label className="inline-flex items-center">
-                      <input
-                        type="radio"
-                        value="theory"
-                        checked={courseType === 'theory'}
-                        onChange={() => setCourseType('theory')}
-                        className="text-blue-600 focus:ring-blue-500 h-4 w-4"
-                      />
-                      <span className="ml-2">Theory</span>
-                    </label>
-                    <label className="inline-flex items-center">
-                      <input
-                        type="radio"
-                        value="theoryCumLab"
-                        checked={courseType === 'theoryCumLab'}
-                        onChange={() => setCourseType('theoryCumLab')}
-                        className="text-blue-600 focus:ring-blue-500 h-4 w-4"
-                      />
-                      <span className="ml-2">Theory cum Lab</span>
-                    </label>
-                  </div>
+                  <select
+                    id="courseType"
+                    value={courseType}
+                    onChange={(e) => setCourseType(e.target.value)}
+                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  >
+                    <option value="theory">Theory</option>
+                    <option value="theoryCumLab">Theory cum Lab</option>
+                    <option value="nptel">NPTEL</option>
+                    <option value="lab">Lab Course</option>
+                  </select>
                 </div>
+
+                {courseType === 'theory' && (
+                  <>
+                    <div>
+                      <label htmlFor="internal1" className="block text-sm font-medium text-gray-700">
+                        Internal 1 (out of 75)
+                      </label>
+                      <input
+                        type="number"
+                        id="internal1"
+                        value={internal1}
+                        onChange={(e) => setInternal1(e.target.value)}
+                        min="0"
+                        max="75"
+                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                      />
+                    </div>
+
+                    <div>
+                      <label htmlFor="internal2" className="block text-sm font-medium text-gray-700">
+                        Internal 2 (out of 75)
+                      </label>
+                      <input
+                        type="number"
+                        id="internal2"
+                        value={internal2}
+                        onChange={(e) => setInternal2(e.target.value)}
+                        min="0"
+                        max="75"
+                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                      />
+                    </div>
+
+                    <div>
+                      <label htmlFor="assignment" className="block text-sm font-medium text-gray-700">
+                        Assignment (out of 50)
+                      </label>
+                      <input
+                        type="number"
+                        id="assignment"
+                        value={assignment}
+                        onChange={(e) => setAssignment(e.target.value)}
+                        min="0"
+                        max="50"
+                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                      />
+                    </div>
+                  </>
+                )}
+
+                {courseType === 'theoryCumLab' && (
+                  <>
+                    <div>
+                      <label htmlFor="internal1" className="block text-sm font-medium text-gray-700">
+                        Internal 1 (out of 75)
+                      </label>
+                      <input
+                        type="number"
+                        id="internal1"
+                        value={internal1}
+                        onChange={(e) => setInternal1(e.target.value)}
+                        min="0"
+                        max="75"
+                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                      />
+                    </div>
+
+                    <div>
+                      <label htmlFor="internal2" className="block text-sm font-medium text-gray-700">
+                        Internal 2 (out of 75)
+                      </label>
+                      <input
+                        type="number"
+                        id="internal2"
+                        value={internal2}
+                        onChange={(e) => setInternal2(e.target.value)}
+                        min="0"
+                        max="75"
+                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                      />
+                    </div>
+
+                    <div>
+                      <label htmlFor="assignment" className="block text-sm font-medium text-gray-700">
+                        Assignment (out of 50)
+                      </label>
+                      <input
+                        type="number"
+                        id="assignment"
+                        value={assignment}
+                        onChange={(e) => setAssignment(e.target.value)}
+                        min="0"
+                        max="50"
+                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                      />
+                    </div>
+
+                    <div>
+                      <label htmlFor="practicalMark" className="block text-sm font-medium text-gray-700">
+                        Practical Mark (out of 50)
+                      </label>
+                      <input
+                        type="number"
+                        id="practicalMark"
+                        value={practicalMark}
+                        onChange={(e) => setPracticalMark(e.target.value)}
+                        min="0"
+                        max="50"
+                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                      />
+                    </div>
+                  </>
+                )}
+
+                {courseType === 'nptel' && (
+                  <div>
+                    <label htmlFor="nptelMark" className="block text-sm font-medium text-gray-700">
+                      NPTEL Mark (out of 100)
+                    </label>
+                    <input
+                      type="number"
+                      id="nptelMark"
+                      value={nptelMark}
+                      onChange={(e) => setNptelMark(e.target.value)}
+                      min="0"
+                      max="100"
+                      className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                    />
+                  </div>
+                )}
+
+                {courseType === 'lab' && (
+                  <>
+                    <div>
+                      <label htmlFor="labInternal" className="block text-sm font-medium text-gray-700">
+                        Internal Lab Mark (out of 25)
+                      </label>
+                      <input
+                        type="number"
+                        id="labInternal"
+                        value={labInternal}
+                        onChange={(e) => setLabInternal(e.target.value)}
+                        min="0"
+                        max="25"
+                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                      />
+                    </div>
+
+                    <div>
+                      <label htmlFor="labExternal" className="block text-sm font-medium text-gray-700">
+                        External Lab Mark (out of 75)
+                      </label>
+                      <input
+                        type="number"
+                        id="labExternal"
+                        value={labExternal}
+                        onChange={(e) => setLabExternal(e.target.value)}
+                        min="0"
+                        max="75"
+                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                      />
+                    </div>
+                  </>
+                )}
               </div>
 
               <button
@@ -202,7 +380,7 @@ const EndSemCalculator: React.FC<EndSemCalculatorProps> = ({ onBack }) => {
             <>
               <div className="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
                 <p className="text-lg text-blue-800">
-                  Your internal mark is <span className="font-bold">{internalMark}</span> out of {courseType === 'theory' ? '40' : '50'}
+                  Your internal mark is <span className="font-bold">{internalMark}</span> out of {courseType === 'theory' ? '40' : courseType === 'theoryCumLab' ? '50' : courseType === 'lab' ? '100' : '100'}
                 </p>
               </div>
 
@@ -237,7 +415,15 @@ const EndSemCalculator: React.FC<EndSemCalculatorProps> = ({ onBack }) => {
               {requiredMark !== null && (
                 <div className="mt-6 p-4 bg-green-50 rounded-lg border border-green-200">
                   <p className="text-lg text-green-800 text-center">
-                    You need to score <span className="font-bold">{requiredMark}</span> in your EndSem exam in {subjectName} <br></br>to get <span className="font-bold">{selectedGrade.toUpperCase()} Grade</span>.
+                    {courseType === 'nptel' ? (
+                      `Your NPTEL mark of ${internalMark} corresponds to ${selectedGrade.toUpperCase()} Grade`
+                    ) : courseType === 'lab' ? (
+                      `Your total lab mark of ${internalMark} corresponds to ${selectedGrade.toUpperCase()} Grade`
+                    ) : (
+                      <>
+                        You need to score <span className="font-bold">{requiredMark}</span> in your EndSem exam in {subjectName} <br></br>to get <span className="font-bold">{selectedGrade.toUpperCase()} Grade</span>.
+                      </>
+                    )}
                   </p>
                 </div>
               )}
@@ -247,6 +433,13 @@ const EndSemCalculator: React.FC<EndSemCalculatorProps> = ({ onBack }) => {
                   setStep(1);
                   setSelectedGrade('');
                   setRequiredMark(null);
+                  setInternal1('');
+                  setInternal2('');
+                  setAssignment('');
+                  setPracticalMark('');
+                  setNptelMark('');
+                  setLabInternal('');
+                  setLabExternal('');
                 }}
                 className="mt-4 w-full bg-gray-200 text-gray-800 py-2 px-4 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50 transition duration-200"
               >

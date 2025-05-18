@@ -180,42 +180,42 @@ const GpaCalculator: React.FC<GpaCalculatorProps> = ({ onBack }) => {
             Semester GPA Calculator
           </h2>
 
-          <div className="space-y-4">
+          <div className="space-y-6">
             {subjects.map((subject, index) => (
               <div 
                 key={subject.id} 
-                className="border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200"
+                className="border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 bg-white"
               >
-                <div className="p-4">
-                  <div className="flex justify-between items-center mb-4">
-                    <h3 className="text-lg font-semibold text-gray-800">
+                <div className="p-6">
+                  <div className="flex justify-between items-center mb-6">
+                    <h3 className="text-xl font-semibold text-gray-800">
                       Subject {index + 1}
                     </h3>
                     <button
                       onClick={() => removeSubject(subject.id)}
                       className="text-red-500 hover:text-red-700 p-2 rounded-full hover:bg-red-50 transition-colors duration-200"
                     >
-                      <X className="w-4 h-4" />
+                      <X className="w-5 h-5" />
                     </button>
                   </div>
 
-                  <div className="space-y-4">
+                  <div className="space-y-6">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700">
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
                         Subject Name
                       </label>
                       <input
                         type="text"
                         value={subject.name}
                         onChange={(e) => updateSubject(subject.id, 'name', e.target.value)}
-                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                        className="mt-1 block w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
                         placeholder="Enter subject name"
                       />
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-2 gap-6">
                       <div>
-                        <label className="block text-sm font-medium text-gray-700">
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
                           Subject Credit
                         </label>
                         <input
@@ -224,18 +224,18 @@ const GpaCalculator: React.FC<GpaCalculatorProps> = ({ onBack }) => {
                           onChange={(e) => updateSubject(subject.id, 'credit', e.target.value)}
                           min="1"
                           max="5"
-                          className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                          className="mt-1 block w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
                         />
                       </div>
 
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
                           Course Type
                         </label>
                         <select
                           value={subject.courseType}
                           onChange={(e) => updateSubjectType(subject.id, e.target.value)}
-                          className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                          className="mt-1 block w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
                         >
                           <option value="theory">Theory</option>
                           <option value="theoryCumLab">Theory cum Lab</option>
@@ -247,7 +247,7 @@ const GpaCalculator: React.FC<GpaCalculatorProps> = ({ onBack }) => {
 
                     {subject.isNPTEL ? (
                       <div>
-                        <label className="block text-sm font-medium text-gray-700">
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
                           NPTEL Mark (out of 100)
                         </label>
                         <input
@@ -256,13 +256,13 @@ const GpaCalculator: React.FC<GpaCalculatorProps> = ({ onBack }) => {
                           onChange={(e) => updateSubject(subject.id, 'internal1', e.target.value)}
                           min="0"
                           max="100"
-                          className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                          className="mt-1 block w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
                         />
                       </div>
                     ) : subject.isFullLab ? (
-                      <div className="grid grid-cols-2 gap-4">
+                      <div className="grid grid-cols-2 gap-6">
                         <div>
-                          <label className="block text-sm font-medium text-gray-700">
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
                             Internal Practical (out of 25)
                           </label>
                           <input
@@ -271,12 +271,12 @@ const GpaCalculator: React.FC<GpaCalculatorProps> = ({ onBack }) => {
                             onChange={(e) => updateSubject(subject.id, 'internal1', e.target.value)}
                             min="0"
                             max="25"
-                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                            className="mt-1 block w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
                           />
                         </div>
 
                         <div>
-                          <label className="block text-sm font-medium text-gray-700">
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
                             End Practical (out of 75)
                           </label>
                           <input
@@ -285,16 +285,16 @@ const GpaCalculator: React.FC<GpaCalculatorProps> = ({ onBack }) => {
                             onChange={(e) => updateSubject(subject.id, 'endSem', e.target.value)}
                             min="0"
                             max="75"
-                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                            className="mt-1 block w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
                           />
                         </div>
                       </div>
                     ) : (
                       <>
-                        <div className="grid grid-cols-2 gap-4">
+                        <div className="grid grid-cols-2 gap-6">
                           <div>
-                            <label className="block text-sm font-medium text-gray-700">
-                              Internal 1 (out of 75)
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                              CAT 1 (out of 75)
                             </label>
                             <input
                               type="number"
@@ -302,13 +302,13 @@ const GpaCalculator: React.FC<GpaCalculatorProps> = ({ onBack }) => {
                               onChange={(e) => updateSubject(subject.id, 'internal1', e.target.value)}
                               min="0"
                               max="75"
-                              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                              className="mt-1 block w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
                             />
                           </div>
 
                           <div>
-                            <label className="block text-sm font-medium text-gray-700">
-                              Internal 2 (out of 75)
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                              CAT 2 (out of 75)
                             </label>
                             <input
                               type="number"
@@ -316,14 +316,14 @@ const GpaCalculator: React.FC<GpaCalculatorProps> = ({ onBack }) => {
                               onChange={(e) => updateSubject(subject.id, 'internal2', e.target.value)}
                               min="0"
                               max="75"
-                              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                              className="mt-1 block w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
                             />
                           </div>
                         </div>
 
-                        <div className="grid grid-cols-2 gap-4">
+                        <div className="grid grid-cols-2 gap-6">
                           <div>
-                            <label className="block text-sm font-medium text-gray-700">
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
                               Assignment (out of 50)
                             </label>
                             <input
@@ -332,13 +332,13 @@ const GpaCalculator: React.FC<GpaCalculatorProps> = ({ onBack }) => {
                               onChange={(e) => updateSubject(subject.id, 'assignment', e.target.value)}
                               min="0"
                               max="50"
-                              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                              className="mt-1 block w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
                             />
                           </div>
 
                           <div>
-                            <label className="block text-sm font-medium text-gray-700">
-                              End Sem Mark
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                              End Sem Mark (out of 100)
                             </label>
                             <input
                               type="number"
@@ -346,14 +346,14 @@ const GpaCalculator: React.FC<GpaCalculatorProps> = ({ onBack }) => {
                               onChange={(e) => updateSubject(subject.id, 'endSem', e.target.value)}
                               min="0"
                               max="100"
-                              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                              className="mt-1 block w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
                             />
                           </div>
                         </div>
 
                         {subject.courseType === 'theoryCumLab' && (
                           <div>
-                            <label className="block text-sm font-medium text-gray-700">
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
                               Practical Mark (out of 50)
                             </label>
                             <input
@@ -362,7 +362,7 @@ const GpaCalculator: React.FC<GpaCalculatorProps> = ({ onBack }) => {
                               onChange={(e) => updateSubject(subject.id, 'practicalMark', e.target.value)}
                               min="0"
                               max="50"
-                              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                              className="mt-1 block w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
                             />
                           </div>
                         )}
@@ -370,28 +370,28 @@ const GpaCalculator: React.FC<GpaCalculatorProps> = ({ onBack }) => {
                     )}
                   </div>
 
-                  <div className="mt-4">
-                    <p className="text-sm font-medium text-gray-700 bg-green-50 p-3 rounded-md">
+                  <div className="mt-6">
+                    <p className="text-sm font-medium text-gray-700 bg-green-50 p-4 rounded-lg border border-green-100">
                       Course Type: {subject.isNPTEL ? 'NPTEL Course' : subject.isFullLab ? 'Lab Course' : subject.courseType === 'theory' ? 'Theory' : 'Theory cum Lab'}
                     </p>
                   </div>
 
                   {subject.totalMark !== null && (
-                    <div className="mt-4 p-4 bg-green-50 rounded-lg border border-green-200">
-                      <div className="grid grid-cols-3 gap-4">
+                    <div className="mt-6 p-6 bg-green-50 rounded-lg border border-green-200">
+                      <div className="grid grid-cols-3 gap-6">
                         <div className="text-center">
-                          <p className="text-sm text-gray-600">Total Mark</p>
-                          <p className="text-lg font-semibold text-green-700">{subject.totalMark.toFixed(2)}</p>
+                          <p className="text-sm text-gray-600 mb-1">Total Mark</p>
+                          <p className="text-xl font-semibold text-green-700">{subject.totalMark.toFixed(2)}</p>
                         </div>
                         <div className="text-center">
-                          <p className="text-sm text-gray-600">Grade</p>
-                          <p className={`text-lg font-semibold ${subject.grade === 'FAIL' ? 'text-red-600' : 'text-green-700'}`}>
+                          <p className="text-sm text-gray-600 mb-1">Grade</p>
+                          <p className={`text-xl font-semibold ${subject.grade === 'FAIL' ? 'text-red-600' : 'text-green-700'}`}>
                             {subject.grade}
                           </p>
                         </div>
                         <div className="text-center">
-                          <p className="text-sm text-gray-600">Grade Point</p>
-                          <p className="text-lg font-semibold text-green-700">{subject.gradePoint}</p>
+                          <p className="text-sm text-gray-600 mb-1">Grade Point</p>
+                          <p className="text-xl font-semibold text-green-700">{subject.gradePoint}</p>
                         </div>
                       </div>
                     </div>
@@ -401,31 +401,31 @@ const GpaCalculator: React.FC<GpaCalculatorProps> = ({ onBack }) => {
             ))}
           </div>
 
-          <div className="mt-6 space-y-4">
+          <div className="mt-8 space-y-4">
             <button
               onClick={addSubject}
-              className="w-full bg-green text-green-600 py-2 px-4 rounded-md hover:bg-green-50 border-2 border-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 transition duration-200"
+              className="w-full bg-white text-green-600 py-3 px-4 rounded-lg hover:bg-green-50 border-2 border-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 transition duration-200 font-medium"
             >
               <div className="flex items-center justify-center">
-                <Plus className="w-4 h-4 mr-2" />
+                <Plus className="w-5 h-5 mr-2" />
                 Add Subject
               </div>
             </button>
 
             <button
               onClick={calculateResults}
-              className="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 transition duration-200"
+              className="w-full bg-green-600 text-white py-3 px-4 rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 transition duration-200 font-medium"
             >
               Calculate GPA
             </button>
           </div>
 
           {gpaResult !== null && (
-            <div className="mt-6 p-4 bg-green-50 rounded-lg border border-green-200 text-center">
-              <h3 className="text-xl font-bold text-green-900 mb-2">
+            <div className="mt-8 p-6 bg-green-50 rounded-lg border border-green-200 text-center">
+              <h3 className="text-2xl font-bold text-green-900 mb-3">
                 Your Semester GPA
               </h3>
-              <p className="text-3xl font-bold text-green-700">
+              <p className="text-4xl font-bold text-green-700">
                 {gpaResult.toFixed(2)}
               </p>
             </div>

@@ -35,9 +35,9 @@ const MainMenu: React.FC<MainMenuProps> = ({ onNavigate }) => {
       id: 'queries',
       title: '4 - Submit a Query',
       subtitle: 'Have questions? Ask us!',
-      icon: <MessageSquare className="w-6 h-6 text-indigo-500" />,
-      color: 'bg-indigo-50 hover:bg-indigo-100',
-      textColor: 'text-indigo-800'
+      icon: <MessageSquare className="w-6 h-6 text-orange-500" />,
+      color: 'bg-orange-50 hover:bg-orange-100',
+      textColor: 'text-orange-800'
     }
   ];
 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowLeft, Send } from 'lucide-react';
+import { ArrowLeft, Send, Sparkles } from 'lucide-react';
 import { Toast } from './Toast';
 
 interface QueriesPageProps {
@@ -20,7 +20,6 @@ const QueriesPage: React.FC<QueriesPageProps> = ({ onBack }) => {
     e.preventDefault();
 
     try {
-      // Create URL-encoded form data
       const formDataObj = new URLSearchParams();
       formDataObj.append('name', formData.name);
       formDataObj.append('email', formData.email);
@@ -29,22 +28,20 @@ const QueriesPage: React.FC<QueriesPageProps> = ({ onBack }) => {
 
       await fetch('https://script.google.com/macros/s/AKfycbxQVjXGjAf0Uur-NcpxX-RVVOgSlErfw0AyCKTowNuC1_LWjf0w377Mrkc5SdBk4rrL/exec', {
         method: 'POST',
-        mode: 'no-cors', // This is important for Google Apps Script
+        mode: 'no-cors',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
         body: formDataObj.toString()
       });
 
-      // Since mode is 'no-cors', we won't get a proper response
-      // We'll assume success if no error was thrown
       setToastType('success');
-      setToastMessage('Query submitted successfully!');
+      setToastMessage('Your message has been sent! ✨');
       setFormData({ name: '', email: '', query: '' });
     } catch (error) {
       console.error('Submission error:', error);
       setToastType('error');
-      setToastMessage('Failed to submit query. Please try again.');
+      setToastMessage('Something went wrong. Try again? 🫶');
     }
     setShowToast(true);
   };
@@ -52,7 +49,7 @@ const QueriesPage: React.FC<QueriesPageProps> = ({ onBack }) => {
   return (
     <div className="min-h-screen p-4 bg-gradient-to-b from-orange-50 to-white">
       <div className="max-w-2xl mx-auto mt-4">
-      <button
+        <button
           onClick={onBack}
           className="flex items-center bg-white px-4 py-2 rounded-full shadow-md hover:shadow-lg text-orange-600 hover:text-orange-800 mb-6 transition-all duration-200 border border-orange-100 hover:border-orange-200"
         >
@@ -60,57 +57,63 @@ const QueriesPage: React.FC<QueriesPageProps> = ({ onBack }) => {
           <span className="font-medium">Back to Menu</span>
         </button>
 
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-2xl font-bold text-orange-800 mb-6">
-            Submit Your Query
-          </h2>
+        <div className="bg-white rounded-2xl shadow-lg p-8 backdrop-blur-sm bg-opacity-90">
+          <div className="flex items-center gap-2 mb-6">
+            <Sparkles className="w-6 h-6 text-orange-500" />
+            <h2 className="text-3xl font-bold bg-gradient-to-r from-orange-600 to-orange-400 bg-clip-text text-transparent">
+              Drop Your Question
+            </h2>
+          </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Name
+                Your Name
               </label>
               <input
                 type="text"
                 required
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                placeholder="What should we call you?"
+                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200"
               />
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Email
+                Your Email
               </label>
               <input
                 type="email"
                 required
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                placeholder="Drop your email here"
+                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200"
               />
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Your Query
+                What's on your mind?
               </label>
               <textarea
                 required
                 value={formData.query}
                 onChange={(e) => setFormData({ ...formData, query: e.target.value })}
+                placeholder="Spill the tea... ☕"
                 rows={4}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200"
               />
             </div>
 
             <button
               type="submit"
-              className="w-full bg-orange-600 text-white py-2 px-4 rounded-md hover:bg-orange-700 transition duration-200 flex items-center justify-center"
+              className="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white py-3 px-6 rounded-xl hover:from-orange-600 hover:to-orange-700 transition duration-200 flex items-center justify-center gap-2 font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
             >
-              <Send className="w-4 h-4 mr-2" />
-              Submit Query
+              <Send className="w-5 h-5" />
+              Send it! 🚀
             </button>
           </form>
         </div>

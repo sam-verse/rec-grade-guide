@@ -429,12 +429,12 @@ const EndSemCalculator: React.FC<EndSemCalculatorProps> = ({ onBack }) => {
                 <div className="mt-6 p-4 bg-green-50 rounded-lg border border-green-200">
                   <p className="text-lg text-green-800 text-center">
                     {courseType === 'nptel' ? (
-                      `Your NPTEL mark of ${internalMark} corresponds to ${displayedGrade.toUpperCase()} Grade`
+                      `Your NPTEL score of ${internalMark} is giving you ${displayedGrade.toUpperCase()} vibes ✨`
                     ) : courseType === 'lab' ? (
-                      `Your total lab mark of ${internalMark} corresponds to ${displayedGrade.toUpperCase()} Grade`
+                      `Your lab score of ${internalMark} is totally ${displayedGrade.toUpperCase()} material 🔥`
                     ) : (
                       <>
-                        You need to score Atleast <span className="font-bold">{displayedRequiredMark}</span> in your EndSem exam in <span className='font-bold'>{subjectName} </span>to get <span className="font-bold">{displayedGrade.toUpperCase()} Grade</span>.
+                        To get that <span className="font-bold">{displayedGrade.toUpperCase()}</span> in <span className='font-bold'>{subjectName}</span>, you need to score at least <span className="font-bold">{displayedRequiredMark}</span> in your EndSem! Let's go! 💪
                       </>
                     )}
                   </p>

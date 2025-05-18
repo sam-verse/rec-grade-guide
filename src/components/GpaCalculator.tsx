@@ -161,7 +161,7 @@ const GpaCalculator: React.FC<GpaCalculatorProps> = ({ onBack }) => {
     if (totalMark >= 71) return 'A';
     if (totalMark >= 61) return 'B+';
     if (totalMark >= 51) return 'B';
-    return 'RA';
+    return 'U';
   };
 
   return (
@@ -385,7 +385,9 @@ const GpaCalculator: React.FC<GpaCalculatorProps> = ({ onBack }) => {
                         </div>
                         <div className="text-center">
                           <p className="text-sm text-gray-600">Grade</p>
-                          <p className="text-lg font-semibold text-green-700">{subject.grade}</p>
+                          <p className={`text-lg font-semibold ${subject.grade === 'FAIL' ? 'text-red-600' : 'text-green-700'}`}>
+                            {subject.grade}
+                          </p>
                         </div>
                         <div className="text-center">
                           <p className="text-sm text-gray-600">Grade Point</p>

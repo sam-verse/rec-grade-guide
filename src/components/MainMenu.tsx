@@ -9,32 +9,32 @@ const MainMenu: React.FC<MainMenuProps> = ({ onNavigate }) => {
   const menuOptions = [
     {
       id: 'endSem',
-      title: '1 - Calculate End Sem Mark with Internals',
-      subtitle: 'For a single subject',
+      title: '1 - End Sem Mark Calculator 📊',
+      subtitle: 'Check what you need to score for that grade',
       icon: <Calculator className="w-6 h-6 text-blue-500" />,
       color: 'bg-blue-50 hover:bg-blue-100',
       textColor: 'text-blue-800'
     },
     {
       id: 'gpa',
-      title: '2 - Calculate Semester GPA',
-      subtitle: 'Approximation of GPA for this semester',
+      title: '2 - Semester GPA Checker 🎯',
+      subtitle: 'See where you stand this sem',
       icon: <Award className="w-6 h-6 text-green-500" />,
       color: 'bg-green-50 hover:bg-green-100',
       textColor: 'text-green-800'
     },
     {
       id: 'cgpa',
-      title: '3 - Calculate CGPA',
-      subtitle: 'Based on all semester GPAs',
+      title: '3 - Overall CGPA Tracker 📈',
+      subtitle: 'Your academic journey so far',
       icon: <BarChart3 className="w-6 h-6 text-purple-500" />,
       color: 'bg-purple-50 hover:bg-purple-100',
       textColor: 'text-purple-800'
     },
     {
       id: 'queries',
-      title: '4 - Submit a Query',
-      subtitle: 'Have questions? Ask us!',
+      title: '4 - Got Questions? Ask Away! 💭',
+      subtitle: 'We got your back, fam',
       icon: <MessageSquare className="w-6 h-6 text-orange-500" />,
       color: 'bg-orange-50 hover:bg-orange-100',
       textColor: 'text-orange-800'
@@ -45,7 +45,7 @@ const MainMenu: React.FC<MainMenuProps> = ({ onNavigate }) => {
     <div className="min-h-screen flex flex-col items-center py-12 px-4 bg-gradient-to-b from-blue-50 to-white">
       <div className="w-full max-w-xl mx-auto">
         <h2 className="text-2xl font-bold text-center text-blue-900 mb-8">
-          Welcome to the <br></br>Grade Guide Calculator
+          Welcome to Grade Guide! <br></br>Let's crush those grades! 💪
         </h2>
         
         <div className="space-y-4">

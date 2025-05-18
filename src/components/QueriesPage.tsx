@@ -50,18 +50,18 @@ const QueriesPage: React.FC<QueriesPageProps> = ({ onBack }) => {
   };
 
   return (
-    <div className="min-h-screen p-4 bg-gradient-to-b from-indigo-50 to-white">
+    <div className="min-h-screen p-4 bg-gradient-to-b from-orange-50 to-white">
       <div className="max-w-2xl mx-auto mt-4">
-        <button
+      <button
           onClick={onBack}
-          className="flex items-center text-indigo-600 hover:text-indigo-800 mb-6"
+          className="flex items-center bg-white px-4 py-2 rounded-full shadow-md hover:shadow-lg text-orange-600 hover:text-orange-800 mb-6 transition-all duration-200 border border-orange-100 hover:border-orange-200"
         >
-          <ArrowLeft className="w-4 h-4 mr-1" />
-          Back to Menu
+          <ArrowLeft className="w-4 h-4 mr-2" />
+          <span className="font-medium">Back to Menu</span>
         </button>
 
         <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-2xl font-bold text-indigo-800 mb-6">
+          <h2 className="text-2xl font-bold text-orange-800 mb-6">
             Submit Your Query
           </h2>
 
@@ -75,7 +75,7 @@ const QueriesPage: React.FC<QueriesPageProps> = ({ onBack }) => {
                 required
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
               />
             </div>
 
@@ -88,7 +88,7 @@ const QueriesPage: React.FC<QueriesPageProps> = ({ onBack }) => {
                 required
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
               />
             </div>
 
@@ -101,13 +101,13 @@ const QueriesPage: React.FC<QueriesPageProps> = ({ onBack }) => {
                 value={formData.query}
                 onChange={(e) => setFormData({ ...formData, query: e.target.value })}
                 rows={4}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
               />
             </div>
 
             <button
               type="submit"
-              className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 transition duration-200 flex items-center justify-center"
+              className="w-full bg-orange-600 text-white py-2 px-4 rounded-md hover:bg-orange-700 transition duration-200 flex items-center justify-center"
             >
               <Send className="w-4 h-4 mr-2" />
               Submit Query

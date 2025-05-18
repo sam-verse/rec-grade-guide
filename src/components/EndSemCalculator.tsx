@@ -23,6 +23,9 @@ const EndSemCalculator: React.FC<EndSemCalculatorProps> = ({ onBack }) => {
   const [nptelMark, setNptelMark] = useState('');
   const [labInternal, setLabInternal] = useState('');
   const [labExternal, setLabExternal] = useState('');
+  const [isGradeCalculated, setIsGradeCalculated] = useState(false);
+  const [displayedGrade, setDisplayedGrade] = useState('');
+  const [displayedRequiredMark, setDisplayedRequiredMark] = useState<number | null>(null);
 
   const handleCalculateInternal = () => {
     if (!subjectName) {
@@ -137,10 +140,20 @@ const EndSemCalculator: React.FC<EndSemCalculatorProps> = ({ onBack }) => {
         setToastMessage('You cannot achieve this grade. Please choose a lower grade.');
         setShowToast(true);
         setRequiredMark(null);
+        setIsGradeCalculated(false);
       } else {
-        setRequiredMark(Math.max(51, Math.ceil(required)));
+        const calculatedMark = Math.max(51, Math.ceil(required));
+        setRequiredMark(calculatedMark);
+        setDisplayedRequiredMark(calculatedMark);
+        setDisplayedGrade(selectedGrade);
+        setIsGradeCalculated(true);
       }
     }
+  };
+
+  const handleGradeChange = (grade: string) => {
+    setSelectedGrade(grade);
+    setIsGradeCalculated(false);
   };
 
   const gradeOptions = [
@@ -396,7 +409,7 @@ const EndSemCalculator: React.FC<EndSemCalculatorProps> = ({ onBack }) => {
                         name="grade"
                         value={grade.value}
                         checked={selectedGrade === grade.value}
-                        onChange={() => setSelectedGrade(grade.value)}
+                        onChange={() => handleGradeChange(grade.value)}
                         className="text-blue-600 focus:ring-blue-500 mr-2"
                       />
                       <span>{grade.label}</span>
@@ -412,16 +425,16 @@ const EndSemCalculator: React.FC<EndSemCalculatorProps> = ({ onBack }) => {
                 Calculate Required Mark
               </button>
 
-              {requiredMark !== null && (
+              {requiredMark !== null && isGradeCalculated && (
                 <div className="mt-6 p-4 bg-green-50 rounded-lg border border-green-200">
                   <p className="text-lg text-green-800 text-center">
                     {courseType === 'nptel' ? (
-                      `Your NPTEL mark of ${internalMark} corresponds to ${selectedGrade.toUpperCase()} Grade`
+                      `Your NPTEL mark of ${internalMark} corresponds to ${displayedGrade.toUpperCase()} Grade`
                     ) : courseType === 'lab' ? (
-                      `Your total lab mark of ${internalMark} corresponds to ${selectedGrade.toUpperCase()} Grade`
+                      `Your total lab mark of ${internalMark} corresponds to ${displayedGrade.toUpperCase()} Grade`
                     ) : (
                       <>
-                        You need to score <span className="font-bold">{requiredMark}</span> in your EndSem exam in {subjectName} <br></br>to get <span className="font-bold">{selectedGrade.toUpperCase()} Grade</span>.
+                        You need to score Atleast <span className="font-bold">{displayedRequiredMark}</span> in your EndSem exam in <span className='font-bold'>{subjectName} </span>to get <span className="font-bold">{displayedGrade.toUpperCase()} Grade</span>.
                       </>
                     )}
                   </p>

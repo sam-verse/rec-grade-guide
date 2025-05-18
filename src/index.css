@@ -1,0 +1,30 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-primary: 'Space Grotesk', sans-serif;
+  --font-secondary: 'Poppins', sans-serif;
+}
+
+body {
+  font-family: var(--font-secondary);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-primary);
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.content {
+  flex: 1 0 auto;
+}
+
+.footer {
+  flex-shrink: 0;
+}

@@ -34,7 +34,7 @@ A comprehensive grade calculation tool designed specifically for Rajalakshmi Eng
 
 1. **Clone the repository**
    ```bash
-   git clone [repository-url]
+   git clone https://github.com/sam-verse/rec-grade-guide.git
    cd rec-grade-guide
    ```
 

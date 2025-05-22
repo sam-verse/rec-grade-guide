@@ -70,5 +70,5 @@ Made with ❤️ by Abraham Samuel E
 ## 📞 Support
 
 For any queries or support, please reach out through:
-- LinkedIn: [Your LinkedIn Profile]
-- Email: [Your Email]
+- LinkedIn: https://www.linkedin.com/in/abraham-samuel-e/
+- Email: abrahamsamuel562004@gmail.com

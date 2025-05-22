@@ -1,60 +1,74 @@
-# 
+# REC Grade Guide
 
-This project is designed specifically for Rajalakshmi Engineering College students to help them calculate and track their academic performance easily.
+A comprehensive grade calculation tool designed specifically for Rajalakshmi Engineering College students to help them calculate and track their academic performance easily.
 
-## About
+🔗 **Live Website:** [REC Grade Guide](https://rec-grade-guide.vercel.app)
 
-MIT License
+## 🚀 Features
 
-## License
+- **End Semester Calculator**
+  - Calculate required end semester marks for your target grade
+  - Supports theory, lab, and NPTEL courses
+  - Real-time grade requirement calculations
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+- **GPA Calculator**
+  - Calculate your Grade Point Average for the current semester
+  - Support for multiple subjects
+  - Handles different course types (Theory, Lab, Theory-cum-Lab)
 
-## Contributing
+- **CGPA Tracker**
+  - Track your Cumulative Grade Point Average across semesters
+  - Monitor your academic progress
+  - Easy-to-use interface for multiple semester data
 
-The build output will be in the `dist` folder, ready for deployment.
 
-```md
-npm run build
-```bash
+## 🛠️ Tech Stack
 
-## Building for Production
+- **Frontend Framework:** React with TypeScript
+- **Styling:** Tailwind CSS
+- **Build Tool:** Vite
+- **Code Quality:** ESLint
+- **Deployment:** Vercel
 
-4. Open [http://localhost:5173](http://localhost:5173) in your browser
-```
+## 💻 Local Development
 
-npm run dev
+1. **Clone the repository**
+   ```bash
+   git clone [repository-url]
+   cd rec-grade-guide
+   ```
 
-```bash
-3. Start the development server:
-```
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
 
-npm install
+3. **Start the development server**
+   ```bash
+   npm run dev
+   ```
+   The app will be available at [http://localhost:5173](http://localhost:5173)
 
-```bash
-2. Install dependencies:
-1. Clone the repository
+4. **Build for production**
+   ```bash
+   npm run build
+   ```
+   The build output will be in the `dist` folder, ready for deployment.
 
-## Local Development
+## 🤝 Contributing
 
-- Netlify for deployment
-- ESLint for code quality
-- Tailwind CSS for styling
-- Vite for build tooling
-- React with TypeScript
+Contributions are welcome! Please feel free to submit a Pull Request. For major changes, please open an issue first to discuss what you would like to change.
 
-## Tech Stack
+## 📝 License
 
-- **Modern UI**: Clean and responsive interface built with React and Tailwind CSS
-- **Query System**: Get answers to common academic questions
-- **End Semester Calculator**: Estimate your end semester results
-- **CGPA Calculator**: Compute Cumulative Grade Point Average across multiple semesters
-- **GPA Calculator**: Calculate your Grade Point Average for a single semester
+This project is licensed under the MIT License - see the LICENSE file for details.
 
-## Features
+## 👨‍💻 Developer
 
-🔗 Live Website: [REC Grade Guide](https://rec-grade-guide.netlify.app)
+Made with ❤️ by Abraham Samuel E
 
-A comprehensive grade calculation tool for Rajalakshmi Engineering College students. Calculate your GPA, CGPA, and estimate end semester results with ease.
-REC Grade Guide
-```
+## 📞 Support
+
+For any queries or support, please reach out through:
+- LinkedIn: [Your LinkedIn Profile]
+- Email: [Your Email]

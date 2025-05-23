@@ -210,8 +210,8 @@ const EndSemCalculator: React.FC<EndSemCalculatorProps> = ({ onBack }) => {
                   >
                     <option value="theory">Theory</option>
                     <option value="theoryCumLab">Theory cum Lab</option>
-                    <option value="nptel">NPTEL</option>
-                    <option value="lab">Lab Course</option>
+                   {/* <option value="nptel">NPTEL</option> */}
+                    {/* <option value="lab">Lab Course</option> */}
                   </select>
                 </div>
 

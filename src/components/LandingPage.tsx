@@ -7,7 +7,7 @@ interface LandingPageProps {
 
 const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
   useEffect(() => {
-    document.title = 'REC Student Mark Calculator';
+    document.title = 'REC Grade Guide';
   }, []);
 
   return (

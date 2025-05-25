@@ -3,6 +3,7 @@ export interface Subject {
   name: string;
   internal1: string;
   internal2: string;
+  internal3: string;
   assignment: string;
   courseType: string;
   credit: string;

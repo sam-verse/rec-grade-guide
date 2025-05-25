@@ -1,14 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ArrowLeft, Plus, X } from 'lucide-react';
 import { calculateCGPA } from '../utils/calculationUtils';
 import { Toast } from './Toast';
 import { Semester } from '../types';
+import UserDetailsModal from './UserDetailsModal';
 
 interface CgpaCalculatorProps {
   onBack: () => void;
 }
 
 const CgpaCalculator: React.FC<CgpaCalculatorProps> = ({ onBack }) => {
+  const [showUserDetailsModal, setShowUserDetailsModal] = useState(true);
+  const [userDetails, setUserDetails] = useState<{ name: string; year: string; department: string } | null>(null);
   const [semesters, setSemesters] = useState<Semester[]>([{ 
     id: Date.now(),
     semesterNumber: 1,
@@ -18,6 +21,40 @@ const CgpaCalculator: React.FC<CgpaCalculatorProps> = ({ onBack }) => {
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
   const [cgpaResult, setCgpaResult] = useState<number | null>(null);
+
+  useEffect(() => {
+    const savedDetails = localStorage.getItem('userDetails');
+    if (savedDetails) {
+      const d = JSON.parse(savedDetails);
+      setUserDetails({ name: d.name, department: d.department, year: d.yearOfStudy });
+      setShowUserDetailsModal(false);
+    }
+  }, []);
+
+  const handleUserDetailsSubmit = (details: { name: string; department: string; yearOfStudy: string }) => {
+    setUserDetails({ name: details.name, department: details.department, year: details.yearOfStudy });
+    setShowUserDetailsModal(false);
+    // Save to localStorage
+    localStorage.setItem('userDetails', JSON.stringify(details));
+  };
+
+  // map numeric year to Roman numerals
+  const yearMap: Record<string, string> = { '1': 'I', '2': 'II', '3': 'III', '4': 'IV' };
+  const formattedYear = userDetails ? yearMap[userDetails.year] || userDetails.year : '';
+
+  // If modal is open, render only the modal
+  if (showUserDetailsModal) {
+    return (
+      <UserDetailsModal
+        isOpen={true}
+        onClose={() => {
+          setShowUserDetailsModal(false);
+        }}
+        onSubmit={handleUserDetailsSubmit}
+        theme="purple"
+      />
+    );
+  }
 
   const addSemester = () => {
     setSemesters([...semesters, { 
@@ -80,13 +117,26 @@ const CgpaCalculator: React.FC<CgpaCalculatorProps> = ({ onBack }) => {
   return (
     <div className="min-h-screen p-4 bg-gradient-to-b from-purple-50 to-white">
       <div className="max-w-2xl mx-auto mt-4">
-      <button
-          onClick={onBack}
-          className="flex items-center bg-white px-4 py-2 rounded-full shadow-md hover:shadow-lg text-purple-600 hover:text-purple-800 mb-6 transition-all duration-200 border border-purple-100 hover:border-purple-200"
-        >
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          <span className="font-medium">Back to Menu</span>
-        </button>
+        <div className="flex justify-between items-center mb-6">
+          <button
+            onClick={onBack}
+            className="flex items-center bg-white px-4 py-2 rounded-full shadow-md hover:shadow-lg text-purple-600 hover:text-purple-800 transition-all duration-200 border border-purple-100 hover:border-purple-200"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            <span className="font-medium">Back to Menu</span>
+          </button>
+          {/* {userDetails && (
+            <div className="flex items-center">
+              <div className="bg-purple-100 text-purple-800 px-3 py-1 rounded-full flex items-center space-x-2 text-sm font-medium">
+                <span>{userDetails.name.toUpperCase()}</span>
+                <span className="font-bold">•</span>
+                <span>{userDetails.department.toUpperCase()}</span>
+                <span className="font-bold">•</span>
+                <span>{formattedYear}</span>
+              </div>
+            </div>
+          )} */}
+        </div>
 
         <div className="bg-white rounded-lg shadow-md p-6">
           <h2 className="text-2xl font-bold text-purple-800 mb-6">

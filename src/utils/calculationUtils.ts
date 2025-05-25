@@ -8,19 +8,39 @@ export function calculateInternalMark(
   internal2: number, 
   assignment: number, 
   courseType: string,
-  endSem: number,
+  internal3: number,
   practicalMark?: number
 ): number {
-  const x = internal1 + internal2 + assignment;
-  
   if (courseType === 'theory') {
-    return (x/5) + (endSem * 0.6);
+    // Calculate internal component out of 40
+    const totalInternalMarks = internal1 + internal2 + internal3 + assignment;
+    const maxPossibleMarks = 75 + 75 + 50 + 50; // 250 total possible marks
+    const internalComponent = (totalInternalMarks / maxPossibleMarks) * 40;
+    
+    // Validate internal component doesn't exceed 40
+    return Math.min(internalComponent, 40);
   } else if (courseType === 'theoryCumLab' && practicalMark !== undefined) {
-    return (x/8) + (practicalMark/2) + (endSem * 0.5);
+    // Calculate theory component out of 25
+    const totalTheoryMarks = internal1 + internal2 + internal3 + assignment;
+    const maxTheoryMarks = 75 + 75 + 50 + 50; // 250 total possible marks
+    const theoryComponent = (totalTheoryMarks / maxTheoryMarks) * 25;
+
+    // Calculate practical component out of 25
+    const practicalComponent = (practicalMark / 50) * 25;
+
+    // Total internal marks out of 50
+    const totalInternal = theoryComponent + practicalComponent;
+    
+    // Validate total internal doesn't exceed 50
+    return Math.min(totalInternal, 50);
   } else if (courseType === 'nptel') {
-    return internal1; // For NPTEL, just use the direct mark out of 100
+    // For NPTEL, just use the direct mark out of 100
+    return Math.min(internal1, 100);
   } else if (courseType === 'fullLab') {
-    return internal1 + endSem; // For lab course, combine internal (25) and end practical (75)
+    // For lab course, combine internal (25) and end practical (75)
+    const total = internal1 + internal2;
+    // Validate total doesn't exceed 100
+    return Math.min(total, 100);
   }
   
   return 0;
@@ -35,10 +55,14 @@ export function calculateRequiredEndSemMark(
   courseType: string
 ): number {
   if (courseType === 'theory') {
-    return (minGradeMark - internalMark) / 0.6;
+    const required = (minGradeMark - internalMark) / 0.6;
+    // Validate end sem mark doesn't exceed 100
+    return Math.min(required, 100);
   } else {
     // For theoryCumLab
-    return (minGradeMark - internalMark) / 0.5;
+    const required = (minGradeMark - internalMark) / 0.5;
+    // Validate end sem mark doesn't exceed 100
+    return Math.min(required, 100);
   }
 }
 

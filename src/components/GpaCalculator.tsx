@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ArrowLeft, Plus, X, MoreVertical } from 'lucide-react';
 import { calculateGradePoint, calculateGPA } from '../utils/calculationUtils';
 import { Toast } from './Toast';
 import { Subject } from '../types';
 import ResultsPopup from './ResultsPopup';
+import UserDetailsModal from './UserDetailsModal';
 
 interface GpaCalculatorProps {
   onBack: () => void;
@@ -15,6 +16,7 @@ const GpaCalculator: React.FC<GpaCalculatorProps> = ({ onBack }) => {
     name: '', 
     internal1: '', 
     internal2: '', 
+    internal3: '', 
     assignment: '', 
     courseType: 'theory', 
     credit: '',
@@ -30,6 +32,42 @@ const GpaCalculator: React.FC<GpaCalculatorProps> = ({ onBack }) => {
   const [toastMessage, setToastMessage] = useState('');
   const [gpaResult, setGpaResult] = useState<number | null>(null);
   const [showResults, setShowResults] = useState(false);
+  const [showUserDetailsModal, setShowUserDetailsModal] = useState(true);
+  const [userDetails, setUserDetails] = useState<{ name: string; year: string; department: string } | null>(null);
+
+  useEffect(() => {
+    const savedDetails = localStorage.getItem('userDetails');
+    if (savedDetails) {
+      const d = JSON.parse(savedDetails);
+      setUserDetails({ name: d.name, department: d.department, year: d.yearOfStudy });
+      setShowUserDetailsModal(false);
+    }
+  }, []);
+
+  const handleUserDetailsSubmit = (details: { name: string; department: string; yearOfStudy: string }) => {
+    setUserDetails({ name: details.name, department: details.department, year: details.yearOfStudy });
+    setShowUserDetailsModal(false);
+    // Save to localStorage
+    localStorage.setItem('userDetails', JSON.stringify(details));
+  };
+
+  // map numeric year to Roman numerals
+  const yearMap: Record<string, string> = { '1': 'I', '2': 'II', '3': 'III', '4': 'IV' };
+  const formattedYear = userDetails ? yearMap[userDetails.year] || userDetails.year : '';
+
+  // If modal is open, render only the modal
+  if (showUserDetailsModal) {
+    return (
+      <UserDetailsModal
+        isOpen={true}
+        onClose={() => {
+          setShowUserDetailsModal(false);
+        }}
+        onSubmit={handleUserDetailsSubmit}
+        theme="green"
+      />
+    );
+  }
 
   const addSubject = () => {
     setSubjects([...subjects, { 
@@ -37,6 +75,7 @@ const GpaCalculator: React.FC<GpaCalculatorProps> = ({ onBack }) => {
       name: '', 
       internal1: '', 
       internal2: '', 
+      internal3: '', 
       assignment: '', 
       courseType: 'theory', 
       credit: '',
@@ -89,12 +128,71 @@ const GpaCalculator: React.FC<GpaCalculatorProps> = ({ onBack }) => {
     // Validate inputs
     const isValid = subjects.every(subject => {
       if (subject.isNPTEL) {
+        const nptelMark = parseFloat(subject.internal1);
+        if (nptelMark > 100) {
+          setToastMessage(`NPTEL mark cannot exceed 100 for ${subject.name}`);
+          setShowToast(true);
+          return false;
+        }
         return subject.name && subject.internal1 && subject.credit;
       }
       if (subject.isFullLab) {
+        const internalPractical = parseFloat(subject.internal1);
+        const endPractical = parseFloat(subject.endSem);
+        if (internalPractical > 25) {
+          setToastMessage(`Internal Practical mark cannot exceed 25 for ${subject.name}`);
+          setShowToast(true);
+          return false;
+        }
+        if (endPractical > 75) {
+          setToastMessage(`End Practical mark cannot exceed 75 for ${subject.name}`);
+          setShowToast(true);
+          return false;
+        }
         return subject.name && subject.internal1 && subject.endSem && subject.credit;
       }
-      const basicFields = subject.name && subject.internal1 && subject.internal2 && subject.assignment && subject.credit && subject.endSem;
+
+      // Validate theory and theoryCumLab courses
+      const cat1 = parseFloat(subject.internal1);
+      const cat2 = parseFloat(subject.internal2);
+      const cat3 = parseFloat(subject.internal3);
+      const assignment = parseFloat(subject.assignment);
+      const endSem = parseFloat(subject.endSem || '0');
+      const practicalMark = subject.practicalMark ? parseFloat(subject.practicalMark) : undefined;
+
+      // Check if any mark exceeds its maximum value
+      if (cat1 > 75) {
+        setToastMessage(`CAT 1 mark cannot exceed 75 for ${subject.name}`);
+        setShowToast(true);
+        return false;
+      }
+      if (cat2 > 75) {
+        setToastMessage(`CAT 2 mark cannot exceed 75 for ${subject.name}`);
+        setShowToast(true);
+        return false;
+      }
+      if (cat3 > 50) {
+        setToastMessage(`CAT 3 mark cannot exceed 50 for ${subject.name}`);
+        setShowToast(true);
+        return false;
+      }
+      if (assignment > 50) {
+        setToastMessage(`Assignment mark cannot exceed 50 for ${subject.name}`);
+        setShowToast(true);
+        return false;
+      }
+      if (endSem > 100) {
+        setToastMessage(`End Sem mark cannot exceed 100 for ${subject.name}`);
+        setShowToast(true);
+        return false;
+      }
+      if (subject.courseType === 'theoryCumLab' && practicalMark && practicalMark > 50) {
+        setToastMessage(`Practical mark cannot exceed 50 for ${subject.name}`);
+        setShowToast(true);
+        return false;
+      }
+
+      const basicFields = subject.name && subject.internal1 && subject.internal2 && subject.internal3 && subject.assignment && subject.credit && subject.endSem;
       if (subject.courseType === 'theoryCumLab') {
         return basicFields && subject.practicalMark;
       }
@@ -102,8 +200,6 @@ const GpaCalculator: React.FC<GpaCalculatorProps> = ({ onBack }) => {
     });
 
     if (!isValid) {
-      setToastMessage('Please fill all required fields for all subjects');
-      setShowToast(true);
       return;
     }
 
@@ -113,26 +209,47 @@ const GpaCalculator: React.FC<GpaCalculatorProps> = ({ onBack }) => {
 
       if (subject.isNPTEL) {
         // For NPTEL, just use the direct mark
-        totalMark = parseFloat(subject.internal1);
+        totalMark = Math.min(parseFloat(subject.internal1), 100);
       } else if (subject.isFullLab) {
         // For Lab course, combine internal (25) and end practical (75)
         const internalPractical = parseFloat(subject.internal1);
         const endPractical = parseFloat(subject.endSem);
-        totalMark = internalPractical + endPractical;
+        totalMark = Math.min(internalPractical + endPractical, 100);
       } else {
         // For regular theory/theory-cum-lab courses
         const internal1 = parseFloat(subject.internal1);
         const internal2 = parseFloat(subject.internal2);
+        const internal3 = parseFloat(subject.internal3);
         const assignment = parseFloat(subject.assignment);
         const endSem = parseFloat(subject.endSem || '0');
         const practicalMark = subject.practicalMark ? parseFloat(subject.practicalMark) : undefined;
         
-        const x = internal1 + internal2 + assignment;
         if (subject.courseType === 'theory') {
-          totalMark = (x/5) + (endSem * 0.6);
+          // Calculate internal component out of 40
+          const totalInternalMarks = internal1 + internal2 + internal3 + assignment;
+          const maxPossibleMarks = 75 + 75 + 50 + 50; // 250 total possible marks
+          const internalComponent = Math.min((totalInternalMarks / maxPossibleMarks) * 40, 40);
+          
+          // Calculate end sem component out of 60
+          const endSemComponent = Math.min(endSem * 0.6, 60);
+          
+          // Calculate total mark
+          totalMark = internalComponent + endSemComponent;
         } else {
           // Theory cum Lab
-          totalMark = (x/8) + (practicalMark! / 2) + (endSem * 0.5);
+          // Calculate theory component out of 25
+          const totalTheoryMarks = internal1 + internal2 + internal3 + assignment;
+          const maxTheoryMarks = 75 + 75 + 50 + 50; // 250 total possible marks
+          const theoryComponent = Math.min((totalTheoryMarks / maxTheoryMarks) * 25, 25);
+
+          // Calculate practical component out of 25
+          const practicalComponent = Math.min((practicalMark! / 50) * 25, 25);
+
+          // Calculate end sem component out of 50
+          const endSemComponent = Math.min(endSem * 0.5, 50);
+
+          // Calculate total mark
+          totalMark = theoryComponent + practicalComponent + endSemComponent;
         }
       }
       
@@ -166,14 +283,27 @@ const GpaCalculator: React.FC<GpaCalculatorProps> = ({ onBack }) => {
 
   return (
     <div className="min-h-screen p-4 bg-gradient-to-b from-green-50 to-white">
-      <div className="max-w-xl mx-auto mt-4">
-      <button
-          onClick={onBack}
-          className="flex items-center bg-white px-4 py-2 rounded-full shadow-md hover:shadow-lg text-green-600 hover:text-green-800 mb-6 transition-all duration-200 border border-green-100 hover:border-green-200"
-        >
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          <span className="font-medium">Back to Menu</span>
-        </button>
+      <div className="max-w-4xl mx-auto mt-4">
+        <div className="flex justify-between items-center mb-6">
+          <button
+            onClick={onBack}
+            className="flex items-center bg-white px-4 py-2 rounded-full shadow-md hover:shadow-lg text-green-600 hover:text-green-800 transition-all duration-200 border border-green-100 hover:border-green-200"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            <span className="font-medium">Back to Menu</span>
+          </button>
+          {/* {userDetails && (
+            <div className="flex items-center">
+              <div className="bg-green-100 text-green-800 px-3 py-1 rounded-full flex items-center space-x-2 text-sm font-medium">
+                <span>{userDetails.name.toUpperCase()}</span>
+                <span className="font-bold">•</span>
+                <span>{userDetails.department.toUpperCase()}</span>
+                <span className="font-bold">•</span>
+                <span>{formattedYear}</span>
+              </div>
+            </div>
+          )} */}
+        </div>
 
         <div className="bg-white rounded-lg shadow-md p-6">
           <h2 className="text-2xl font-bold text-green-900 mb-6">
@@ -213,36 +343,34 @@ const GpaCalculator: React.FC<GpaCalculatorProps> = ({ onBack }) => {
                       />
                     </div>
 
-                    <div className="grid grid-cols-2 gap-6">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Subject Credit
-                        </label>
-                        <input
-                          type="number"
-                          value={subject.credit}
-                          onChange={(e) => updateSubject(subject.id, 'credit', e.target.value)}
-                          min="1"
-                          max="5"
-                          className="mt-1 block w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
-                        />
-                      </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Subject Credit
+                      </label>
+                      <input
+                        type="number"
+                        value={subject.credit}
+                        onChange={(e) => updateSubject(subject.id, 'credit', e.target.value)}
+                        min="1"
+                        max="5"
+                        className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                      />
+                    </div>
 
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Course Type
-                        </label>
-                        <select
-                          value={subject.courseType}
-                          onChange={(e) => updateSubjectType(subject.id, e.target.value)}
-                          className="mt-1 block w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
-                        >
-                          <option value="theory">Theory</option>
-                          <option value="theoryCumLab">Theory cum Lab</option>
-                          <option value="nptel">NPTEL Course</option>
-                          <option value="fullLab">Lab Course</option>
-                        </select>
-                      </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Course Type
+                      </label>
+                      <select
+                        value={subject.courseType}
+                        onChange={(e) => updateSubjectType(subject.id, e.target.value)}
+                        className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                      >
+                        <option value="theory">Theory</option>
+                        <option value="theoryCumLab">Theory cum Lab</option>
+                        <option value="nptel">NPTEL Course</option>
+                        <option value="fullLab">Lab Course</option>
+                      </select>
                     </div>
 
                     {subject.isNPTEL ? (
@@ -289,6 +417,82 @@ const GpaCalculator: React.FC<GpaCalculatorProps> = ({ onBack }) => {
                           />
                         </div>
                       </div>
+                    ) : subject.courseType === 'theory' ? (
+                      <>
+                        <div className="grid grid-cols-2 gap-6">
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                              CAT 1 (out of 75)
+                            </label>
+                            <input
+                              type="number"
+                              value={subject.internal1}
+                              onChange={(e) => updateSubject(subject.id, 'internal1', e.target.value)}
+                              min="0"
+                              max="75"
+                              className="mt-1 block w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                            />
+                          </div>
+
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                              CAT 2 (out of 75)
+                            </label>
+                            <input
+                              type="number"
+                              value={subject.internal2}
+                              onChange={(e) => updateSubject(subject.id, 'internal2', e.target.value)}
+                              min="0"
+                              max="75"
+                              className="mt-1 block w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-6">
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                              CAT 3 (out of 50)
+                            </label>
+                            <input
+                              type="number"
+                              value={subject.internal3}
+                              onChange={(e) => updateSubject(subject.id, 'internal3', e.target.value)}
+                              min="0"
+                              max="50"
+                              className="mt-1 block w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                            />
+                          </div>
+
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                              Assignment (out of 50)
+                            </label>
+                            <input
+                              type="number"
+                              value={subject.assignment}
+                              onChange={(e) => updateSubject(subject.id, 'assignment', e.target.value)}
+                              min="0"
+                              max="50"
+                              className="mt-1 block w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                            />
+                          </div>
+                        </div>
+
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                            End Sem Mark (out of 100)
+                          </label>
+                          <input
+                            type="number"
+                            value={subject.endSem}
+                            onChange={(e) => updateSubject(subject.id, 'endSem', e.target.value)}
+                            min="0"
+                            max="100"
+                            className="mt-1 block w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                          />
+                        </div>
+                      </>
                     ) : (
                       <>
                         <div className="grid grid-cols-2 gap-6">
@@ -324,6 +528,20 @@ const GpaCalculator: React.FC<GpaCalculatorProps> = ({ onBack }) => {
                         <div className="grid grid-cols-2 gap-6">
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">
+                              CAT 3 (out of 50)
+                            </label>
+                            <input
+                              type="number"
+                              value={subject.internal3}
+                              onChange={(e) => updateSubject(subject.id, 'internal3', e.target.value)}
+                              min="0"
+                              max="50"
+                              className="mt-1 block w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                            />
+                          </div>
+
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
                               Assignment (out of 50)
                             </label>
                             <input
@@ -335,7 +553,9 @@ const GpaCalculator: React.FC<GpaCalculatorProps> = ({ onBack }) => {
                               className="mt-1 block w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
                             />
                           </div>
+                        </div>
 
+                        <div className="grid grid-cols-2 gap-6">
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">
                               End Sem Mark (out of 100)
@@ -349,9 +569,7 @@ const GpaCalculator: React.FC<GpaCalculatorProps> = ({ onBack }) => {
                               className="mt-1 block w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
                             />
                           </div>
-                        </div>
 
-                        {subject.courseType === 'theoryCumLab' && (
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">
                               Practical Mark (out of 50)
@@ -365,7 +583,7 @@ const GpaCalculator: React.FC<GpaCalculatorProps> = ({ onBack }) => {
                               className="mt-1 block w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
                             />
                           </div>
-                        )}
+                        </div>
                       </>
                     )}
                   </div>

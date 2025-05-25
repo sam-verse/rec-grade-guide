@@ -9,7 +9,7 @@ const MainMenu: React.FC<MainMenuProps> = ({ onNavigate }) => {
   const menuOptions = [
     {
       id: 'endSem',
-      title: 'End Sem Mark Calculator 📊',
+      title: 'Calculate EndSem Mark  📊',
       subtitle: 'Check what you need to score for that grade',
       icon: <Calculator className="w-7 h-7 text-blue-500" />,
       color: 'bg-blue-50 hover:bg-blue-100',
@@ -33,8 +33,8 @@ const MainMenu: React.FC<MainMenuProps> = ({ onNavigate }) => {
     },
     {
       id: 'queries',
-      title: 'Got Questions ? Ask Away! 💭',
-      subtitle: 'We got your back, fam',
+      title: 'Queries? Ask Away! 💭',
+      subtitle: 'Slide into the inbox with your questions.',
       icon: <MessageSquare className="w-7 h-7 text-orange-500" />,
       color: 'bg-orange-50 hover:bg-orange-100',
       textColor: 'text-orange-800'

@@ -42,18 +42,17 @@ const MainMenu: React.FC<MainMenuProps> = ({ onNavigate }) => {
   ];
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-blue-50 to-white">
-      <div className="w-full max-w-xl mx-auto px-4">
-        <h2 className="text-2xl font-extrabold text-center text-blue-900 mb-8">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-blue-50 to-white">
+      <div className="w-full max-w-5xl px-4 py-16 lg:py-24 transform -translate-y-12">
+        <h2 className="text-2xl md:text-5xl lg:text-6xl font-extrabold text-center text-blue-900 mb-6 font-bold">
           Welcome to Grade Guide! <br></br><span className='text-xl font-semibold'>Let's crush those grades!💪</span>
         </h2>
-        
-        <div className="space-y-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 justify-items-center gap-6 sm:gap-8 md:gap-10 lg:gap-12">
           {menuOptions.map((option) => (
             <button
               key={option.id}
               onClick={() => onNavigate(option.id)}
-              className={`w-full flex items-center justify-between p-5 rounded-lg shadow-sm ${option.color} transition-all duration-300 ease-in-out transform hover:shadow-md hover:translate-x-1`}
+              className={`max-w-xs w-full flex items-center justify-between p-4 sm:p-6 rounded-lg shadow-lg ${option.color} transition-none md:transition-transform duration-300 ease-out md:hover:shadow-2xl md:hover:scale-105 ${option.id === 'queries' ? 'lg:col-start-2' : ''}`}
             >
               <div className="flex items-center">
                 <div className="mr-5">

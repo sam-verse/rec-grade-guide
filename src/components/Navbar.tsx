@@ -215,42 +215,44 @@ const Navbar: React.FC<NavbarProps> = ({
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <section>
                   <div className="bg-white p-6 rounded-lg shadow-md">
-                    <h3 className={`text-xl font-semibold text-${themeColor}-800 mb-4`}>Calculation Techniques</h3>
+                    <h3 className={`text-xl font-semibold text-${themeColor}-800 mb-4`}>End-Sem Mark Calculator</h3>
                     <ul className="list-disc list-inside space-y-2">
-                      <li>Assign grade points to each course</li>
-                      <li>Multiply grade points by credit hours</li>
-                      <li>Sum products and divide by total credits</li>
+                      <li>Enter current scores and desired grade</li>
+                      <li>Calculate required marks on end-sem exam</li>
+                      <li>Plan your study targets effectively</li>
+                      <li><span className='font-semibold'>How it's Calculated:</span> computes required exam marks using weighted difference between desired grade threshold and current scores</li>
                     </ul>
                   </div>
                 </section>
                 <section>
                   <div className="bg-white p-6 rounded-lg shadow-md">
-                    <h3 className={`text-xl font-semibold text-${themeColor}-800 mb-4`}>Cumulative GPA (CGPA)</h3>
+                    <h3 className={`text-xl font-semibold text-${themeColor}-800 mb-4`}>Semester GPA Checker</h3>
                     <ul className="list-disc list-inside space-y-2">
-                      <li>Average of semester GPAs</li>
-                      <li>Weighted by credits per semester</li>
+                      <li>Input grades and credit hours per course</li>
+                      <li>Compute semester GPA instantly</li>
+                      <li>Visualize academic performance</li>
+                      <li><span className='font-semibold'>How it's Calculated:</span> uses Σ(grade points × credits) / Σ credits to calculate GPA</li>
                     </ul>
                   </div>
                 </section>
                 <section>
                   <div className="bg-white p-6 rounded-lg shadow-md">
-                    <h3 className={`text-xl font-semibold text-${themeColor}-800 mb-4`}>Grade Distribution</h3>
+                    <h3 className={`text-xl font-semibold text-${themeColor}-800 mb-4`}>Overall CGPA Tracker</h3>
                     <ul className="list-disc list-inside space-y-2">
-                      <li><strong>A:</strong> 90-100%</li>
-                      <li><strong>B:</strong> 80-89%</li>
-                      <li><strong>C:</strong> 70-79%</li>
-                      <li><strong>D:</strong> 60-69%</li>
-                      <li><strong>F:</strong> Below 60%</li>
+                      <li>Aggregate semester GPAs with credit weight</li>
+                      <li>Monitor your CGPA progression over time</li>
+                      <li>Identify trends and improve performance</li>
+                      <li><span className='font-semibold'>How it's Calculated:</span> averages semester GPAs weighted by credits across terms</li>
                     </ul>
                   </div>
                 </section>
                 <section>
                   <div className="bg-white p-6 rounded-lg shadow-md">
-                    <h3 className={`text-xl font-semibold text-${themeColor}-800 mb-4`}>Backlog Calculation</h3>
+                    <h3 className={`text-xl font-semibold text-${themeColor}-800 mb-4`}>Queries & Support</h3>
                     <ul className="list-disc list-inside space-y-2">
-                      <li>Courses with F are backlogs</li>
-                      <li>Must be cleared in subsequent semesters</li>
-                      <li>Affects CGPA calculation</li>
+                      <li>Submit academic queries directly</li>
+                      <li>Receive guidance and feedback</li>
+                      <li>Stay connected for updates</li>
                     </ul>
                   </div>
                 </section>

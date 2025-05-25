@@ -664,16 +664,16 @@ const EndSemCalculator: React.FC<EndSemCalculatorProps> = ({ onBack }) => {
                     {courseType === 'nptel' ? (
                       <>
                         To get <span className="font-bold">{displayedGrade.toUpperCase()}</span> in {subjectName},
-                        you need to score at least <span className="font-bold">{displayedRequiredMark?.toFixed(2)}</span> in your external exam (out of 75)!
+                        you need to score at least <span className="font-bold">{displayedRequiredMark?.toFixed(2)}</span> in your external exam
                       </>
                     ) : courseType === 'lab' ? (
                       <>
                         To get <span className="font-bold">{displayedGrade.toUpperCase()}</span> in {subjectName},
-                        you need to score at least <span className="font-bold">{displayedRequiredMark?.toFixed(2)}</span> in your external exam (out of 75)!
+                        you need to score at least <span className="font-bold">{displayedRequiredMark?.toFixed(2)}</span> in your external exam
                       </>
                     ) : (
                       <>
-                        To get that <span className="font-bold">{displayedGrade.toUpperCase()}</span> in <span className='font-bold'>{subjectName}</span>, you need to score at least <span className="font-bold">{displayedRequiredMark}</span> in your EndSem! Let's go! 💪
+                        To get that <span className="font-bold">{displayedGrade.toUpperCase()}</span> in <span className='font-bold'>{subjectName}</span>, you need to score at least <span className="font-bold">{displayedRequiredMark}</span> in your EndSem!
                       </>
                     )}
                   </p>

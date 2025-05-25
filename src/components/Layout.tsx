@@ -1,4 +1,5 @@
 import React, { createContext, useContext } from 'react';
+import { useAppContext } from '../context/AppContext';
 import Navbar from './Navbar';
 
 interface UserContextType {
@@ -27,22 +28,31 @@ interface LayoutProps {
   isLoggedIn: boolean;
   onLogout: () => void;
   onLogin: () => void;
-  onQueries?: () => void;
+  onNavigate: (view: string) => void;
   currentTheme?: string;
+  currentView?: string;
   userDetails: { name: string; department: string; yearOfStudy: string };
 }
 
-const Layout: React.FC<LayoutProps> = ({ children, isLoggedIn, onLogout, onLogin, onQueries, currentTheme = 'blue', userDetails }) => {
+const Layout: React.FC<LayoutProps> = ({ children, isLoggedIn, onLogout, onLogin, onNavigate, currentTheme = 'blue', currentView, userDetails }) => {
+  const { clearHistory } = useAppContext();
+  // history persists until explicit logout
+
+  const handleLogout = () => { clearHistory(); onLogout(); };
+
+  // override theme to yellow if viewing history
+  const effectiveTheme = currentView === 'history' ? 'yellow' : currentTheme;
+
   return (
-    <UserContext.Provider value={{ isLoggedIn, userDetails, openLoginModal: onLogin, currentTheme }}>
+    <UserContext.Provider value={{ isLoggedIn, userDetails, openLoginModal: onLogin, currentTheme: effectiveTheme }}>
       <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
         <Navbar
           isLoggedIn={isLoggedIn}
-          onLogout={onLogout}
+          onLogout={handleLogout}
           onLogin={onLogin}
-          onQueries={onQueries}
+          onNavigate={onNavigate}
           userDetails={userDetails}
-          currentTheme={currentTheme}
+          currentTheme={effectiveTheme}
         />
         <main className="pt-16">
           <div className="w-full p-0">

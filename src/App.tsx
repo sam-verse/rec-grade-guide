@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useAppContext } from './context/AppContext';
 import Layout from './components/Layout';
 import UserDetailsModal from './components/UserDetailsModal';
 import LandingPage from './components/LandingPage';
@@ -7,6 +8,7 @@ import EndSemCalculator from './components/EndSemCalculator';
 import GpaCalculator from './components/GpaCalculator';
 import CgpaCalculator from './components/CgpaCalculator';
 import QueriesPage from './components/QueriesPage';
+import HistoryPage from './components/HistoryPage';
 import Footer from './components/Footer';
 import { AppProvider } from './context/AppContext';
 
@@ -31,6 +33,8 @@ const App: React.FC = () => {
         return 'purple';
       case 'queries':
         return 'orange';
+      case 'history':
+        return 'blue';
       default:
         return 'blue';
     }
@@ -73,15 +77,13 @@ const App: React.FC = () => {
   const handleLogout = () => {
     setIsLoggedIn(false);
     setIsModalOpen(false);
-    setUserDetails({
-      name: '',
-      department: '',
-      yearOfStudy: ''
-    });
+    setUserDetails({ name: '', department: '', yearOfStudy: '' });
     // Clear localStorage
     localStorage.removeItem('userSession');
     localStorage.removeItem('userDetails');
     localStorage.removeItem('pendingView');
+    // Navigate back to landing via navigateTo for consistency
+    navigateTo('landing');
   };
 
   // Restore session and user details from localStorage on mount
@@ -100,7 +102,15 @@ const App: React.FC = () => {
 
   return (
     <AppProvider>
-      <Layout isLoggedIn={isLoggedIn} onLogout={handleLogout} onLogin={() => setIsModalOpen(true)} onQueries={() => navigateTo('queries')} currentTheme={currentTheme} userDetails={userDetails}>
+      <Layout
+        isLoggedIn={isLoggedIn}
+        onLogout={handleLogout}
+        onLogin={() => setIsModalOpen(true)}
+        onNavigate={navigateTo}
+        currentView={currentView}
+        currentTheme={currentTheme}
+        userDetails={userDetails}
+      >
         <div className="app-container">
           <main className="content">
             {currentView === 'landing' && (
@@ -126,8 +136,12 @@ const App: React.FC = () => {
             {currentView === 'queries' && (
               <QueriesPage onBack={() => navigateTo('menu')} />
             )}
+            
+            {currentView === 'history' && (
+              <HistoryPage onBack={() => navigateTo('menu')} />
+            )}
           </main>
-          <Footer currentView={currentView} />
+          <Footer currentView={currentView} onNavigate={navigateTo} />
         </div>
 
         <UserDetailsModal

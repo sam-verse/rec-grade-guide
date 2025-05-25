@@ -4,12 +4,14 @@ import { calculateCGPA } from '../utils/calculationUtils';
 import { Toast } from './Toast';
 import { Semester } from '../types';
 import UserDetailsModal from './UserDetailsModal';
+import { useAppContext } from '../context/AppContext';
 
 interface CgpaCalculatorProps {
   onBack: () => void;
 }
 
 const CgpaCalculator: React.FC<CgpaCalculatorProps> = ({ onBack }) => {
+  const { addHistory } = useAppContext();
   const [showUserDetailsModal, setShowUserDetailsModal] = useState(true);
   const [userDetails, setUserDetails] = useState<{ name: string; year: string; department: string } | null>(null);
   const [semesters, setSemesters] = useState<Semester[]>([{ 
@@ -112,6 +114,14 @@ const CgpaCalculator: React.FC<CgpaCalculatorProps> = ({ onBack }) => {
     // Calculate CGPA
     const cgpa = calculateCGPA(semesters);
     setCgpaResult(cgpa);
+    // record history entry for CGPA
+    addHistory({
+      id: Date.now().toString(),
+      view: 'cgpa',
+      inputs: semesters,
+      result: cgpa,
+      timestamp: new Date().toISOString()
+    });
   };
 
   return (

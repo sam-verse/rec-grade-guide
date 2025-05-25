@@ -3,6 +3,7 @@ import { ArrowLeft, AlertCircle } from 'lucide-react';
 import { calculateInternalMark, calculateRequiredEndSemMark } from '../utils/calculationUtils';
 import { Toast } from './Toast';
 import UserDetailsModal from './UserDetailsModal';
+import { useAppContext } from '../context/AppContext';
 
 interface EndSemCalculatorProps {
   onBack: () => void;
@@ -39,6 +40,8 @@ const EndSemCalculator: React.FC<EndSemCalculatorProps> = ({ onBack }) => {
   const [nptelAssignment7, setNptelAssignment7] = useState('');
   const [nptelAssignment8, setNptelAssignment8] = useState('');
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
+
+  const { addHistory } = useAppContext();
 
   // map numeric year to Roman numerals for display
   const yearMap: Record<string, string> = { '1': 'I', '2': 'II', '3': 'III', '4': 'IV' };
@@ -113,7 +116,7 @@ const EndSemCalculator: React.FC<EndSemCalculatorProps> = ({ onBack }) => {
         break;
 
       case 'theoryCumLab':
-        if (!internal1 || !internal2 || !internal3 || !assignment || !practicalMark) {
+        if (!internal1 || !internal2 || !internal3 || !assignment) {
           setToastMessage('Please fill all required fields');
           setShowToast(true);
           return;
@@ -122,9 +125,9 @@ const EndSemCalculator: React.FC<EndSemCalculatorProps> = ({ onBack }) => {
         const int2Lab = parseFloat(internal2);
         const int3Lab = parseFloat(internal3);
         const assignLab = parseFloat(assignment);
-        const pracMark = parseFloat(practicalMark);
+        const pracMark = practicalMark ? parseFloat(practicalMark) : 0;
         
-        if (int1Lab > 75 || int2Lab > 75 || int3Lab > 50 || assignLab > 50 || pracMark > 50) {
+        if (int1Lab > 75 || int2Lab > 75 || int3Lab > 50 || assignLab > 50 || (practicalMark && pracMark > 50)) {
           setToastMessage('Please enter valid marks (Internal 1 & 2: 0-75, Internal 3 & Assignment & Practical: 0-50)');
           setShowToast(true);
           return;
@@ -134,7 +137,7 @@ const EndSemCalculator: React.FC<EndSemCalculatorProps> = ({ onBack }) => {
         const maxTheoryLabMarks = 75 + 75 + 50 + 50;
         const theoryComponent = (totalTheoryMarks / maxTheoryLabMarks) * 25;
 
-        const practicalComponent = (pracMark / 50) * 25;
+        const practicalComponent = pracMark ? (pracMark / 50) * 25 : 0;
 
         const internalLab = theoryComponent + practicalComponent;
         setInternalMark(internalLab);
@@ -230,6 +233,57 @@ const EndSemCalculator: React.FC<EndSemCalculatorProps> = ({ onBack }) => {
         setDisplayedRequiredMark(calculatedMark);
         setDisplayedGrade(selectedGrade);
         setIsGradeCalculated(true);
+        // Prepare inputs for history
+        const historyInputs: any = {
+          subjectName,
+          courseType,
+          selectedGrade
+        };
+
+        // Add relevant inputs based on course type
+        if (courseType === 'lab') {
+          if (labInternal) historyInputs.labInternal = labInternal;
+          if (labExternal) historyInputs.labExternal = labExternal;
+        } else if (courseType === 'theoryCumLab') {
+          if (internal1) historyInputs.internal1 = internal1;
+          if (internal2) historyInputs.internal2 = internal2;
+          if (internal3) historyInputs.internal3 = internal3;
+          if (assignment) historyInputs.assignment = assignment;
+          // Always save practical mark for Theory Cum Lab courses
+          if (courseType === 'theoryCumLab') {
+            console.log('Saving practical mark for history. Current value:', practicalMark);
+            // Convert to number if it's a string
+            const markValue = practicalMark ? Number(practicalMark) : 0;
+            console.log('Converted practical mark:', markValue);
+            historyInputs.practical = markValue;
+          }
+        } else {
+          if (internal1) historyInputs.internal1 = internal1;
+          if (internal2) historyInputs.internal2 = internal2;
+          if (internal3) historyInputs.internal3 = internal3;
+          if (assignment) historyInputs.assignment = assignment;
+        }
+
+        // Add NPTEL specific fields if applicable
+        if (courseType === 'nptel') {
+          if (nptelAssignment1) historyInputs.nptelAssignment1 = nptelAssignment1;
+          if (nptelAssignment2) historyInputs.nptelAssignment2 = nptelAssignment2;
+          if (nptelAssignment3) historyInputs.nptelAssignment3 = nptelAssignment3;
+          if (nptelAssignment4) historyInputs.nptelAssignment4 = nptelAssignment4;
+          if (nptelAssignment5) historyInputs.nptelAssignment5 = nptelAssignment5;
+          if (nptelAssignment6) historyInputs.nptelAssignment6 = nptelAssignment6;
+          if (nptelAssignment7) historyInputs.nptelAssignment7 = nptelAssignment7;
+          if (nptelAssignment8) historyInputs.nptelAssignment8 = nptelAssignment8;
+        }
+
+        // Record history entry with detailed inputs
+        addHistory({
+          id: Date.now().toString(),
+          view: 'endSem',
+          inputs: historyInputs,
+          result: { requiredMark: calculatedMark },
+          timestamp: new Date().toISOString()
+        });
       }
     }
   };
@@ -459,7 +513,11 @@ const EndSemCalculator: React.FC<EndSemCalculatorProps> = ({ onBack }) => {
                         type="number"
                         id="practicalMark"
                         value={practicalMark}
-                        onChange={(e) => setPracticalMark(e.target.value)}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          console.log('Setting practicalMark to:', value);
+                          setPracticalMark(value);
+                        }}
                         min="0"
                         max="50"
                         className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"

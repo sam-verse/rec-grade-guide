@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
 import { Linkedin, Mail, Heart } from 'lucide-react';
 
-interface FooterProps { currentView: string; }
+interface FooterProps { 
+  currentView: string; 
+}
 
 const Footer: React.FC<FooterProps> = ({ currentView }) => {
   const [showPrivacy, setShowPrivacy] = useState(false);
   const themeMap: Record<string, { footer: string; header: string; subText: string; divider: string }> = {
-    gpa: { footer: 'from-green-900 to-green-900', header: 'bg-green-600', subText: 'text-green-200', divider: 'via-green-200' },
-    cgpa: { footer: 'from-purple-900 to-purple-900', header: 'bg-purple-600', subText: 'text-purple-200', divider: 'via-purple-200' },
-    queries: { footer: 'from-orange-900 to-orange-900', header: 'bg-orange-600', subText: 'text-orange-200', divider: 'via-orange-200' }
+    gpa:      { footer: 'from-green-900 to-green-900',   header: 'bg-green-600',   subText: 'text-green-200',   divider: 'via-green-200' },
+    cgpa:     { footer: 'from-purple-900 to-purple-900', header: 'bg-purple-600',  subText: 'text-purple-200', divider: 'via-purple-200' },
+    queries:  { footer: 'from-orange-900 to-orange-900', header: 'bg-orange-600',  subText: 'text-orange-200', divider: 'via-orange-200' },
+    history:  { footer: 'from-yellow-900 to-yellow-900', header: 'bg-yellow-600',  subText: 'text-yellow-200', divider: 'via-yellow-200' }
   };
   const { footer: footerGradient, header: headerBg, subText: subTextColor, divider: dividerColor } = themeMap[currentView] || { footer: 'from-blue-900 to-indigo-900', header: 'bg-blue-600', subText: 'text-blue-200', divider: 'via-blue-200' };
 
@@ -32,14 +35,14 @@ const Footer: React.FC<FooterProps> = ({ currentView }) => {
                   href="https://www.linkedin.com/in/abraham-samuel-e/" 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="hover:text-blue-300 transition-colors transform hover:scale-110"
+                  className={`${subTextColor} hover:text-white transition-colors duration-300 transform hover:scale-110`}
                   aria-label="LinkedIn"
                 >
                   <Linkedin className="w-5 h-5" />
                 </a>
                 <a 
                   href="mailto:abrahamsamuel562004@gmail.com"
-                  className="hover:text-blue-300 transition-colors transform hover:scale-110"
+                  className={`${subTextColor} hover:text-white transition-colors duration-300 transform hover:scale-110`}
                   aria-label="Email"
                 >
                   <Mail className="w-5 h-5" />
@@ -48,7 +51,7 @@ const Footer: React.FC<FooterProps> = ({ currentView }) => {
                   href="https://www.instagram.com/abraham._.samuel/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:text-blue-300 transition-colors transform hover:scale-110"
+                  className={`${subTextColor} hover:text-white transition-colors duration-300 transform hover:scale-110`}
                   aria-label="Instagram"
                 >
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -88,6 +91,7 @@ const Footer: React.FC<FooterProps> = ({ currentView }) => {
           </div>
         </div>
       )}
+      {/* Navigation links removed per user request */}
     </>
   );
 };

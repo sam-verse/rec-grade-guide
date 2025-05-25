@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useAppContext } from '../context/AppContext';
 import { ArrowLeft, Plus, X, MoreVertical } from 'lucide-react';
 import { calculateGradePoint, calculateGPA } from '../utils/calculationUtils';
 import { Toast } from './Toast';
@@ -34,6 +35,7 @@ const GpaCalculator: React.FC<GpaCalculatorProps> = ({ onBack }) => {
   const [showResults, setShowResults] = useState(false);
   const [showUserDetailsModal, setShowUserDetailsModal] = useState(true);
   const [userDetails, setUserDetails] = useState<{ name: string; year: string; department: string } | null>(null);
+  const { addHistory } = useAppContext();
 
   useEffect(() => {
     const savedDetails = localStorage.getItem('userDetails');
@@ -269,6 +271,14 @@ const GpaCalculator: React.FC<GpaCalculatorProps> = ({ onBack }) => {
     // Calculate GPA
     const gpa = calculateGPA(calculatedSubjects);
     setGpaResult(gpa);
+    // record history entry
+    addHistory({
+      id: Date.now().toString(),
+      view: 'gpa',
+      inputs: calculatedSubjects,
+      result: gpa,
+      timestamp: new Date().toISOString()
+    });
     setShowResults(true);
   };
 

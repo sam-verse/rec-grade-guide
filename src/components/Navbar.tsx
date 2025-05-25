@@ -4,7 +4,7 @@ interface NavbarProps {
   isLoggedIn: boolean;
   onLogout: () => void;
   onLogin?: () => void;
-  onQueries?: () => void;
+  onNavigate: (view: string) => void;
   userDetails: {
     name: string;
     department: string;
@@ -17,7 +17,7 @@ const Navbar: React.FC<NavbarProps> = ({
   isLoggedIn, 
   onLogout,
   onLogin,
-  onQueries,
+  onNavigate,
   userDetails,
   currentTheme
 }) => {
@@ -61,9 +61,7 @@ const Navbar: React.FC<NavbarProps> = ({
 
   const handleQueries = () => {
     setIsMenuOpen(false);
-    if (onQueries) {
-      onQueries();
-    }
+    onNavigate('queries');
   };
 
   const handleLogout = () => {
@@ -104,6 +102,12 @@ const Navbar: React.FC<NavbarProps> = ({
                   Queries
                 </button>
                 <button
+                  onClick={() => { setIsMenuOpen(false); onNavigate('history'); }}
+                  className={`px-4 py-2 text-${themeColor}-600 hover:text-${themeColor}-900 transition-colors duration-200`}
+                >
+                  History
+                </button>
+                <button
                   onClick={handleLogout}
                   className="px-4 py-2 bg-red-600 text-white rounded-md transform transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-xl hover:bg-red-700"
                 >
@@ -117,7 +121,7 @@ const Navbar: React.FC<NavbarProps> = ({
           <div className="md:hidden flex items-center">
             <button
               onClick={toggleMenu}
-              className={`inline-flex items-center justify-center p-2 rounded-md text-${themeColor}-600 hover:text-${themeColor}-900 hover:bg-${themeColor}-50 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-${themeColor}-500`}
+              className={`group inline-flex items-center justify-center p-2 rounded-md text-${themeColor}-600 hover:text-${themeColor}-900 hover:bg-${themeColor}-50 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-${themeColor}-500 transition-colors duration-200`}
               aria-expanded={isMenuOpen}
             >
               <span className="sr-only">Open main menu</span>
@@ -129,7 +133,13 @@ const Navbar: React.FC<NavbarProps> = ({
                 viewBox="0 0 24 24"
                 stroke="currentColor"
               >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                <path 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round" 
+                  strokeWidth={2} 
+                  d="M4 6h16M4 12h16M4 18h16" 
+                  className={`text-${themeColor}-600 group-hover:text-${themeColor}-900 transition-colors duration-200`}
+                />
               </svg>
               {/* Close Icon */}
               <svg
@@ -139,7 +149,13 @@ const Navbar: React.FC<NavbarProps> = ({
                 viewBox="0 0 24 24"
                 stroke="currentColor"
               >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                <path 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round" 
+                  strokeWidth={2} 
+                  d="M6 18L18 6M6 6l12 12" 
+                  className={`text-${themeColor}-600 group-hover:text-${themeColor}-900 transition-colors duration-200`}
+                />
               </svg>
             </button>
           </div>
@@ -166,7 +182,7 @@ const Navbar: React.FC<NavbarProps> = ({
           {!isLoggedIn ? (
             <button
               onClick={handleLogin}
-              className={`block w-full text-left px-3 py-2 rounded-md text-base font-medium text-white bg-${themeColor}-600 hover:bg-${themeColor}-700`}
+              className={`block w-full text-left px-3 py-2 rounded-md text-base font-medium text-white bg-${themeColor}-600 hover:bg-${themeColor}-700 transition-colors duration-200`}
             >
               Login
             </button>
@@ -177,19 +193,25 @@ const Navbar: React.FC<NavbarProps> = ({
                   setShowAbout(true);
                   setIsMenuOpen(false);
                 }}
-                className={`block w-full text-left px-3 py-2 rounded-md text-base font-medium text-${themeColor}-600 hover:text-${themeColor}-900 hover:bg-${themeColor}-50`}
+                className={`block w-full text-left px-3 py-2 rounded-md text-base font-medium text-${themeColor}-600 hover:text-${themeColor}-900 hover:bg-${themeColor}-50 transition-colors duration-200`}
               >
                 About
               </button>
               <button
                 onClick={handleQueries}
-                className={`block w-full text-left px-3 py-2 rounded-md text-base font-medium text-${themeColor}-600 hover:text-${themeColor}-900 hover:bg-${themeColor}-50`}
+                className={`block w-full text-left px-3 py-2 rounded-md text-base font-medium text-${themeColor}-600 hover:text-${themeColor}-900 hover:bg-${themeColor}-50 transition-colors duration-200`}
               >
                 Queries
               </button>
               <button
+                onClick={() => { setIsMenuOpen(false); onNavigate('history'); }}
+                className={`block w-full text-left px-3 py-2 rounded-md text-base font-medium text-${themeColor}-600 hover:text-${themeColor}-900 hover:bg-${themeColor}-50 transition-colors duration-200`}
+              >
+                History
+              </button>
+              <button
                 onClick={handleLogout}
-                className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-red-600 hover:text-red-700 hover:bg-red-50"
+                className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-red-600 hover:text-red-700 hover:bg-red-50 transition-colors duration-200"
               >
                 Logout
               </button>

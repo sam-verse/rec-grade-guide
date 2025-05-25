@@ -1,5 +1,18 @@
 import React, { useState, useEffect } from 'react';
 
+// Extend the Window interface to include our custom callback
+declare global {
+  interface Window {
+    [key: string]: (response: any) => void;
+  }
+}
+
+// Helper function to handle navigation to queries
+const goToQueries = (onNavigate: (view: string) => void, setShowAbout: (show: boolean) => void) => {
+  setShowAbout(false); // Close the about popup
+  onNavigate('queries'); // Navigate to queries page
+};
+
 interface NavbarProps {
   isLoggedIn: boolean;
   onLogout: () => void;
@@ -24,6 +37,7 @@ const Navbar: React.FC<NavbarProps> = ({
   const [showAbout, setShowAbout] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+
   useEffect(() => {
     if (isLoggedIn) setIsMenuOpen(true);
   }, [isLoggedIn]);
@@ -43,6 +57,74 @@ const Navbar: React.FC<NavbarProps> = ({
   };
 
   const themeColor = getThemeColor();
+  
+  // Get theme color classes
+  const getThemeClasses = () => {
+    switch (themeColor) {
+      case 'green':
+        return {
+          bg: 'bg-green-600 hover:bg-green-700',
+          text: 'text-green-700',
+          border: 'border-green-200',
+          lightBg: 'bg-green-50',
+          darkBg: 'bg-green-800',
+          gradientFrom: 'from-green-900',
+          gradientTo: 'to-green-800',
+          ring: 'ring-green-500',
+          hoverText: 'hover:text-green-900'
+        };
+      case 'purple':
+        return {
+          bg: 'bg-purple-600 hover:bg-purple-700',
+          text: 'text-purple-700',
+          border: 'border-purple-200',
+          lightBg: 'bg-purple-50',
+          darkBg: 'bg-purple-800',
+          gradientFrom: 'from-purple-900',
+          gradientTo: 'to-purple-800',
+          ring: 'ring-purple-500',
+          hoverText: 'hover:text-purple-900'
+        };
+      case 'orange':
+        return {
+          bg: 'bg-orange-600 hover:bg-orange-700',
+          text: 'text-orange-700',
+          border: 'border-orange-200',
+          lightBg: 'bg-orange-50',
+          darkBg: 'bg-orange-800',
+          gradientFrom: 'from-orange-900',
+          gradientTo: 'to-orange-800',
+          ring: 'ring-orange-500',
+          hoverText: 'hover:text-orange-900'
+        };
+      case 'red':
+        return {
+          bg: 'bg-red-600 hover:bg-red-700',
+          text: 'text-red-700',
+          border: 'border-red-200',
+          lightBg: 'bg-red-50',
+          darkBg: 'bg-red-800',
+          gradientFrom: 'from-red-900',
+          gradientTo: 'to-red-800',
+          ring: 'ring-red-500',
+          hoverText: 'hover:text-red-900'
+        };
+      default: // blue
+        return {
+          bg: 'bg-blue-600 hover:bg-blue-700',
+          text: 'text-blue-700',
+          border: 'border-blue-200',
+          lightBg: 'bg-blue-50',
+          darkBg: 'bg-blue-800',
+          gradientFrom: 'from-blue-900',
+          gradientTo: 'to-blue-800',
+          ring: 'ring-blue-500',
+          hoverText: 'hover:text-blue-900'
+        };
+    }
+  };
+  
+  const themeClasses = getThemeClasses();
 
   // map numeric year to roman numerals
   const yearMap: Record<string, string> = { '1': 'I', '2': 'II', '3': 'III', '4': 'IV' };
@@ -57,11 +139,6 @@ const Navbar: React.FC<NavbarProps> = ({
     if (onLogin) {
       onLogin();
     }
-  };
-
-  const handleQueries = () => {
-    setIsMenuOpen(false);
-    onNavigate('queries');
   };
 
   const handleLogout = () => {
@@ -83,7 +160,7 @@ const Navbar: React.FC<NavbarProps> = ({
             {!isLoggedIn ? (
               <button
                 onClick={handleLogin}
-                className={`px-4 py-2 bg-${themeColor}-600 text-white rounded-md transform transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-xl hover:bg-${themeColor}-700`}
+                className={`px-4 py-2 ${themeClasses.bg} text-white rounded-md transform transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-xl`}
               >
                 Login
               </button>
@@ -94,12 +171,6 @@ const Navbar: React.FC<NavbarProps> = ({
                   className={`px-4 py-2 text-${themeColor}-600 hover:text-${themeColor}-900 transition-colors duration-200`}
                 >
                   About
-                </button>
-                <button
-                  onClick={handleQueries}
-                  className={`px-4 py-2 text-${themeColor}-600 hover:text-${themeColor}-900 transition-colors duration-200`}
-                >
-                  Queries
                 </button>
                 <button
                   onClick={() => { setIsMenuOpen(false); onNavigate('history'); }}
@@ -182,7 +253,7 @@ const Navbar: React.FC<NavbarProps> = ({
           {!isLoggedIn ? (
             <button
               onClick={handleLogin}
-              className={`block w-full text-left px-3 py-2 rounded-md text-base font-medium text-white bg-${themeColor}-600 hover:bg-${themeColor}-700 transition-colors duration-200`}
+              className={`block w-full text-left px-3 py-2 rounded-md text-base font-medium text-white ${themeClasses.bg} transition-colors duration-200`}
             >
               Login
             </button>
@@ -196,12 +267,6 @@ const Navbar: React.FC<NavbarProps> = ({
                 className={`block w-full text-left px-3 py-2 rounded-md text-base font-medium text-${themeColor}-600 hover:text-${themeColor}-900 hover:bg-${themeColor}-50 transition-colors duration-200`}
               >
                 About
-              </button>
-              <button
-                onClick={handleQueries}
-                className={`block w-full text-left px-3 py-2 rounded-md text-base font-medium text-${themeColor}-600 hover:text-${themeColor}-900 hover:bg-${themeColor}-50 transition-colors duration-200`}
-              >
-                Queries
               </button>
               <button
                 onClick={() => { setIsMenuOpen(false); onNavigate('history'); }}
@@ -220,64 +285,170 @@ const Navbar: React.FC<NavbarProps> = ({
         </div>
       </div>
 
-      {/* About Modal */}
+      {/* Enhanced About Modal */}
       {showAbout && (
-        <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4">
-          <div className={`relative bg-${themeColor}-50 rounded-xl shadow-2xl max-w-3xl w-full mx-auto max-h-[90vh] overflow-y-auto border border-${themeColor}-200`}>
-            <div className={`flex justify-between items-center sticky top-0 bg-${themeColor}-600 py-4 px-6 rounded-t-xl`}> 
-              <h2 className="text-2xl font-bold text-white">About Grade Calculation</h2>
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fadeIn">
+          <div className={`relative bg-white rounded-2xl shadow-2xl max-w-5xl w-full mx-auto max-h-[90vh] overflow-y-auto border-2 ${themeClasses.border} transform transition-all duration-300 scale-95 hover:scale-100`}>
+            {/* Header */}
+            <div className={`sticky top-0 bg-gradient-to-r ${themeClasses.gradientFrom} ${themeClasses.gradientTo} py-5 px-6 rounded-t-2xl flex justify-between items-center z-10`}>
+              <h2 className="text-2xl md:text-4xl font-bold text-${themeColor}-600 flex items-center gap-2">
+                {/* <span className="bg-${themeColor}-800/20 p-2 rounded-lg">📊</span> */}
+                <span className="text-${themeColor} text-white">GradeGuide</span>
+              </h2>
               <button
                 onClick={() => setShowAbout(false)}
-                className="text-white hover:text-gray-200"
+                className="text-${themeColor}-600 hover:bg-${themeColor}-50 p-2 rounded-full transition-colors duration-200"
+                aria-label="Close"
               >
-                ✕
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
               </button>
             </div>
-            <div className="px-6 py-6 text-${themeColor}-900">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <section>
-                  <div className="bg-white p-6 rounded-lg shadow-md">
-                    <h3 className={`text-xl font-semibold text-${themeColor}-800 mb-4`}>End-Sem Mark Calculator</h3>
-                    <ul className="list-disc list-inside space-y-2">
-                      <li>Enter current scores and desired grade</li>
-                      <li>Calculate required marks on end-sem exam</li>
-                      <li>Plan your study targets effectively</li>
-                      <li><span className='font-semibold'>How it's Calculated:</span> computes required exam marks using weighted difference between desired grade threshold and current scores</li>
-                    </ul>
+
+            {/* Content */}
+            <div className="p-6 md:p-8">
+              <p className="text-gray-600 text-center mb-8 text-lg">
+                Your all-in-one academic companion for grade calculation, GPA tracking, and academic planning
+              </p>
+              
+              {/* Features Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {/* Feature 1 */}
+                <div className={`bg-gradient-to-br from-white to-${themeColor}-50 rounded-xl p-6 border border-${themeColor}-100 hover:shadow-lg transition-all duration-300 hover:-translate-y-1`}>
+                  <div className={`w-12 h-12 rounded-xl bg-${themeColor}-100 flex items-center justify-center mb-4`}>
+                    <span className="text-2xl">📝</span>
                   </div>
-                </section>
-                <section>
-                  <div className="bg-white p-6 rounded-lg shadow-md">
-                    <h3 className={`text-xl font-semibold text-${themeColor}-800 mb-4`}>Semester GPA Checker</h3>
-                    <ul className="list-disc list-inside space-y-2">
-                      <li>Input grades and credit hours per course</li>
-                      <li>Compute semester GPA instantly</li>
-                      <li>Visualize academic performance</li>
-                      <li><span className='font-semibold'>How it's Calculated:</span> uses Σ(grade points × credits) / Σ credits to calculate GPA</li>
-                    </ul>
+                  <h3 className="text-lg font-bold text-gray-800 mb-3">End-Sem Calculator</h3>
+                  <p className="text-gray-600 text-sm mb-4">Calculate the marks needed in your final exams to achieve your target grade.</p>
+                  <ul className="space-y-2 text-sm">
+                    <li className="flex items-center">
+                      <span className="w-1.5 h-1.5 rounded-full bg-green-500 mr-2"></span>
+                      Current score analysis
+                    </li>
+                    <li className="flex items-center">
+                      <span className="w-1.5 h-1.5 rounded-full bg-green-500 mr-2"></span>
+                      Target grade estimation
+                    </li>
+                    <li className="flex items-center">
+                      <span className="w-1.5 h-1.5 rounded-full bg-green-500 mr-2"></span>
+                      Study planning
+                    </li>
+                  </ul>
+                </div>
+
+                {/* Feature 2 */}
+                <div className={`bg-gradient-to-br from-white to-${themeColor}-50 rounded-xl p-6 border border-${themeColor}-100 hover:shadow-lg transition-all duration-300 hover:-translate-y-1`}>
+                  <div className={`w-12 h-12 rounded-xl bg-${themeColor}-100 flex items-center justify-center mb-4`}>
+                    <span className="text-2xl">📊</span>
                   </div>
-                </section>
-                <section>
-                  <div className="bg-white p-6 rounded-lg shadow-md">
-                    <h3 className={`text-xl font-semibold text-${themeColor}-800 mb-4`}>Overall CGPA Tracker</h3>
-                    <ul className="list-disc list-inside space-y-2">
-                      <li>Aggregate semester GPAs with credit weight</li>
-                      <li>Monitor your CGPA progression over time</li>
-                      <li>Identify trends and improve performance</li>
-                      <li><span className='font-semibold'>How it's Calculated:</span> averages semester GPAs weighted by credits across terms</li>
-                    </ul>
+                  <h3 className="text-lg font-bold text-gray-800 mb-3">GPA Calculator</h3>
+                  <p className="text-gray-600 text-sm mb-4">Track and calculate your semester GPA with our intuitive interface.</p>
+                  <ul className="space-y-2 text-sm">
+                    <li className="flex items-center">
+                      <span className="w-1.5 h-1.5 rounded-full bg-blue-500 mr-2"></span>
+                      Course grade tracking
+                    </li>
+                    <li className="flex items-center">
+                      <span className="w-1.5 h-1.5 rounded-full bg-blue-500 mr-2"></span>
+                      Credit hour management
+                    </li>
+                    <li className="flex items-center">
+                      <span className="w-1.5 h-1.5 rounded-full bg-blue-500 mr-2"></span>
+                      Performance insights
+                    </li>
+                  </ul>
+                </div>
+
+                {/* Feature 3 */}
+                <div className={`bg-gradient-to-br from-white to-${themeColor}-50 rounded-xl p-6 border border-${themeColor}-100 hover:shadow-lg transition-all duration-300 hover:-translate-y-1`}>
+                  <div className={`w-12 h-12 rounded-xl bg-${themeColor}-100 flex items-center justify-center mb-4`}>
+                    <span className="text-2xl">📈</span>
                   </div>
-                </section>
-                <section>
-                  <div className="bg-white p-6 rounded-lg shadow-md">
-                    <h3 className={`text-xl font-semibold text-${themeColor}-800 mb-4`}>Queries & Support</h3>
-                    <ul className="list-disc list-inside space-y-2">
-                      <li>Submit academic queries directly</li>
-                      <li>Receive guidance and feedback</li>
-                      <li>Stay connected for updates</li>
-                    </ul>
+                  <h3 className="text-lg font-bold text-gray-800 mb-3">CGPA Tracker</h3>
+                  <p className="text-gray-600 text-sm mb-4">Monitor your academic progress across multiple semesters.</p>
+                  <ul className="space-y-2 text-sm">
+                    <li className="flex items-center">
+                      <span className="w-1.5 h-1.5 rounded-full bg-purple-500 mr-2"></span>
+                      Semester-wise analysis
+                    </li>
+                    <li className="flex items-center">
+                      <span className="w-1.5 h-1.5 rounded-full bg-purple-500 mr-2"></span>
+                      Trend visualization
+                    </li>
+                    <li className="flex items-center">
+                      <span className="w-1.5 h-1.5 rounded-full bg-purple-500 mr-2"></span>
+                      Performance forecasting
+                    </li>
+                  </ul>
+                </div>
+
+                {/* Feature 4 */}
+                <div className={`bg-gradient-to-br from-white to-${themeColor}-50 rounded-xl p-6 border border-${themeColor}-100 hover:shadow-lg transition-all duration-300 hover:-translate-y-1`}>
+                  <div className={`w-12 h-12 rounded-xl bg-${themeColor}-100 flex items-center justify-center mb-4`}>
+                    <span className="text-2xl">💬</span>
                   </div>
-                </section>
+                  <h3 className="text-lg font-bold text-gray-800 mb-3">Support Center</h3>
+                  <p className="text-gray-600 text-sm mb-4">Get help and support for all your academic queries.</p>
+                  <ul className="space-y-2 text-sm">
+                    <li className="flex items-center">
+                      <span className="w-1.5 h-1.5 rounded-full bg-amber-500 mr-2"></span>
+                      24/7 Query Support
+                    </li>
+                    <li className="flex items-center">
+                      <span className="w-1.5 h-1.5 rounded-full bg-amber-500 mr-2"></span>
+                      Academic Resources
+                    </li>
+                    <li className="flex items-center">
+                      <span className="w-1.5 h-1.5 rounded-full bg-amber-500 mr-2"></span>
+                      Quick Response Time
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              {/* Feedback & CTA Section */}
+              <div className={`mt-10 p-8 rounded-xl bg-white ${themeClasses.border} shadow-lg`}>
+                <div className="text-center mb-6">
+                  <h6 className={`text-lg font-bold ${themeClasses.text} mb-2`}>We'd love your feedback!</h6>
+                  <p className="text-gray-600 max-w-lg text-sm mx-auto">
+                    Help us improve GradeGuide by sharing your experience
+                  </p>
+                </div>
+                
+                {/* Rating Section */}
+                <div className="mb-6">
+                  <p className="text-sm font-medium text-gray-700 text-center mb-3">How would you rate your experience?</p>
+                  <div className="flex items-center justify-center space-x-1 mb-6">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <span key={star} className="text-3xl text-yellow-400">
+                        ★
+                      </span>
+                    ))}
+                  </div>
+                  
+                  {/* Action Button */}
+                  <div className="flex justify-center">
+                    <button 
+                      onClick={(e) => {
+                        e.preventDefault();
+                        goToQueries(onNavigate, setShowAbout);
+                      }}
+                      className={`px-6 py-3 text-white rounded-lg font-medium transition-colors duration-200 shadow-md hover:shadow-lg ${themeClasses.bg}`}
+                    >
+                      Go to Queries
+                    </button>
+                  </div>
+                </div>
+                
+                <div className="text-center">
+                  <button 
+                    onClick={() => setShowAbout(false)}
+                    className="text-sm text-gray-500 hover:text-gray-700 underline"
+                  >
+                    Skip for Now
+                  </button>
+                </div>
               </div>
             </div>
           </div>

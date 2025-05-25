@@ -50,9 +50,9 @@ const MainMenu: React.FC<MainMenuProps> = ({ onNavigate }) => {
   ];
 
   return (
-    <div className="min-h-screen flex items-start pt-8 sm:items-center justify-center bg-gradient-to-b from-blue-50 to-white">
-      <div className="w-full max-w-7xl px-4 sm:px-6 py-8 sm:py-12 lg:py-20 xl:py-28">
-        <div className="text-center max-w-4xl mx-auto mb-6 sm:mb-10 lg:mb-16 xl:mb-20">
+    <div className="min-h-screen flex items-start pt-4 sm:items-center justify-center bg-gradient-to-b from-blue-50 to-white">
+      <div className="w-full max-w-7xl px-4 sm:px-6 py-4 sm:py-8 lg:py-12 xl:py-16">
+        <div className="text-center max-w-4xl mx-auto mb-4 sm:mb-8 lg:mb-12 xl:mb-16">
           <h2 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-blue-900 leading-tight">
             Welcome to Grade Guide!
           </h2>

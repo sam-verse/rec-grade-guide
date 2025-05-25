@@ -127,7 +127,7 @@ const App: React.FC = () => {
               <QueriesPage onBack={() => navigateTo('menu')} />
             )}
           </main>
-          <Footer />
+          <Footer currentView={currentView} />
         </div>
 
         <UserDetailsModal

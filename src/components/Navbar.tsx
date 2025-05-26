@@ -322,17 +322,17 @@ const Navbar: React.FC<NavbarProps> = ({
                   <h3 className="text-lg font-bold text-gray-800 mb-3">End-Sem Calculator</h3>
                   <p className="text-gray-600 text-sm mb-4">Calculate the marks needed in your final exams to achieve your target grade.</p>
                   <ul className="space-y-2 text-sm">
-                    <li className="flex items-center">
-                      <span className="w-1.5 h-1.5 rounded-full bg-green-500 mr-2"></span>
-                      Current score analysis
+                    <li className="flex items-start">
+                      <span className="w-1.5 h-1.5 rounded-full bg-green-500 mr-2 mt-1.5 flex-shrink-0"></span>
+                      <span>Calculate minimum marks needed in final exams to reach your target grade</span>
                     </li>
-                    <li className="flex items-center">
-                      <span className="w-1.5 h-1.5 rounded-full bg-green-500 mr-2"></span>
-                      Target grade estimation
+                    <li className="flex items-start">
+                      <span className="w-1.5 h-1.5 rounded-full bg-green-500 mr-2 mt-1.5 flex-shrink-0"></span>
+                      <span>Considers your current internal assessment scores</span>
                     </li>
-                    <li className="flex items-center">
-                      <span className="w-1.5 h-1.5 rounded-full bg-green-500 mr-2"></span>
-                      Study planning
+                    <li className="flex items-start">
+                      <span className="w-1.5 h-1.5 rounded-full bg-green-500 mr-2 mt-1.5 flex-shrink-0"></span>
+                      <span>Customizable weightage for internal and external components</span>
                     </li>
                   </ul>
                 </div>
@@ -345,17 +345,17 @@ const Navbar: React.FC<NavbarProps> = ({
                   <h3 className="text-lg font-bold text-gray-800 mb-3">GPA Calculator</h3>
                   <p className="text-gray-600 text-sm mb-4">Track and calculate your semester GPA with our intuitive interface.</p>
                   <ul className="space-y-2 text-sm">
-                    <li className="flex items-center">
-                      <span className="w-1.5 h-1.5 rounded-full bg-blue-500 mr-2"></span>
-                      Course grade tracking
+                    <li className="flex items-start">
+                      <span className="w-1.5 h-1.5 rounded-full bg-blue-500 mr-2 mt-1.5 flex-shrink-0"></span>
+                      <span>Accurate GPA calculation based on your course grades and credits</span>
                     </li>
-                    <li className="flex items-center">
-                      <span className="w-1.5 h-1.5 rounded-full bg-blue-500 mr-2"></span>
-                      Credit hour management
+                    <li className="flex items-start">
+                      <span className="w-1.5 h-1.5 rounded-full bg-blue-500 mr-2 mt-1.5 flex-shrink-0"></span>
+                      <span>Follows standard academic grading scales</span>
                     </li>
-                    <li className="flex items-center">
-                      <span className="w-1.5 h-1.5 rounded-full bg-blue-500 mr-2"></span>
-                      Performance insights
+                    <li className="flex items-start">
+                      <span className="w-1.5 h-1.5 rounded-full bg-blue-500 mr-2 mt-1.5 flex-shrink-0"></span>
+                      <span>Track your semester GPA and overall academic progress</span>
                     </li>
                   </ul>
                 </div>
@@ -368,17 +368,17 @@ const Navbar: React.FC<NavbarProps> = ({
                   <h3 className="text-lg font-bold text-gray-800 mb-3">CGPA Tracker</h3>
                   <p className="text-gray-600 text-sm mb-4">Monitor your academic progress across multiple semesters.</p>
                   <ul className="space-y-2 text-sm">
-                    <li className="flex items-center">
-                      <span className="w-1.5 h-1.5 rounded-full bg-purple-500 mr-2"></span>
-                      Semester-wise analysis
+                    <li className="flex items-start">
+                      <span className="w-1.5 h-1.5 rounded-full bg-purple-500 mr-2 mt-1.5 flex-shrink-0"></span>
+                      <span>Track your cumulative GPA across all semesters</span>
                     </li>
-                    <li className="flex items-center">
-                      <span className="w-1.5 h-1.5 rounded-full bg-purple-500 mr-2"></span>
-                      Trend visualization
+                    <li className="flex items-start">
+                      <span className="w-1.5 h-1.5 rounded-full bg-purple-500 mr-2 mt-1.5 flex-shrink-0"></span>
+                      <span>Weighted average that accounts for course credit hours</span>
                     </li>
-                    <li className="flex items-center">
-                      <span className="w-1.5 h-1.5 rounded-full bg-purple-500 mr-2"></span>
-                      Performance forecasting
+                    <li className="flex items-start">
+                      <span className="w-1.5 h-1.5 rounded-full bg-purple-500 mr-2 mt-1.5 flex-shrink-0"></span>
+                      <span>Includes all attempts and retakes in your academic history</span>
                     </li>
                   </ul>
                 </div>
@@ -388,20 +388,20 @@ const Navbar: React.FC<NavbarProps> = ({
                   <div className={`w-12 h-12 rounded-xl bg-${themeColor}-100 flex items-center justify-center mb-4`}>
                     <span className="text-2xl">💬</span>
                   </div>
-                  <h3 className="text-lg font-bold text-gray-800 mb-3">Support Center</h3>
-                  <p className="text-gray-600 text-sm mb-4">Get help and support for all your academic queries.</p>
+                  <h3 className="text-lg font-bold text-gray-800 mb-3">GradeGuide Support</h3>
+                  <p className="text-gray-600 text-sm mb-4">Need help with GradeGuide? We're here to assist with any questions or changes.</p>
                   <ul className="space-y-2 text-sm">
                     <li className="flex items-center">
                       <span className="w-1.5 h-1.5 rounded-full bg-amber-500 mr-2"></span>
-                      24/7 Query Support
+                      Grade Calculation Queries
                     </li>
                     <li className="flex items-center">
                       <span className="w-1.5 h-1.5 rounded-full bg-amber-500 mr-2"></span>
-                      Academic Resources
+                      Feature Requests
                     </li>
                     <li className="flex items-center">
                       <span className="w-1.5 h-1.5 rounded-full bg-amber-500 mr-2"></span>
-                      Quick Response Time
+                      Report Issues
                     </li>
                   </ul>
                 </div>

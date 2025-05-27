@@ -359,7 +359,7 @@ const GpaCalculator: React.FC<GpaCalculatorProps> = ({ onBack }) => {
                         } rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500`}
                         placeholder="Enter the Full subject name "
                       />
-                      {subject.name && subject.name.length < 5 && (
+                      {subject.name && subject.name.length < 2 && (
                         <p className="mt-1 text-sm text-red-600">Enter the Subject Name Correctly</p>
                       )}
                     </div>

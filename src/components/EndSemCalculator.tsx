@@ -368,7 +368,7 @@ const EndSemCalculator: React.FC<EndSemCalculatorProps> = ({ onBack }) => {
                     } rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500`}
                     placeholder="e.g. Data Structures "
                   />
-                  {subjectName && subjectName.length < 5 && (
+                  {subjectName && subjectName.length < 2 && (
                     <p className="mt-1 text-sm text-red-600">Enter the Subject Name Properly</p>
                   )}
                 </div>

@@ -21,7 +21,7 @@ const Footer: React.FC<FooterProps> = ({ currentView }) => {
         <div className="container mx-auto px-4">
           <div className="flex flex-col items-center space-y-6">
             <div className="text-center">
-              <h3 className="font-primary text-2xl font-bold mb-2">GradeGuide REC</h3>
+              <h3 className="font-primary text-2xl font-bold mb-2">REC GradeGuide</h3>
               <p className={`text-sm ${subTextColor}`}>Your Academic Journey, Simplified</p>
             </div>
             
@@ -64,7 +64,7 @@ const Footer: React.FC<FooterProps> = ({ currentView }) => {
             <div className={`w-full max-w-xs mx-auto h-px bg-gradient-to-r from-transparent ${dividerColor} to-transparent my-4`}></div>
             
             <div className={`text-center text-sm ${subTextColor}`}>
-              <p> {new Date().getFullYear()} GradeGuide REC</p>
+              <p> {new Date().getFullYear()}REC GradeGuide</p>
               <p className="mt-1">Rajalakshmi Engineering College</p>
               <div className="text-xs mt-2">
                 <button onClick={() => setShowPrivacy(true)} className={`underline hover:text-white ${subTextColor}`}>Privacy Policy</button>
@@ -81,12 +81,19 @@ const Footer: React.FC<FooterProps> = ({ currentView }) => {
               <button onClick={() => setShowPrivacy(false)} className="text-white hover:text-gray-200">✕</button>
             </div>
             <div className="p-6 text-gray-800 text-sm space-y-6">
-              <p>Welcome to GradeGuide REC’s Privacy Policy. Your trust is important to us, and we are committed to maintaining transparency about how this tool operates and handles any information you provide. Please read through this overview to understand what data is collected, how it is processed, and your rights as a user.</p>
-              <p>This application is designed by a student for students of Rajalakshmi Engineering College. The only personal information collected and stored is your name and department, which are used exclusively for anonymous statistical research and future enhancements. No identifying markers such as roll numbers, email addresses, or contact details are retained.</p>
-              <p>All computations performed by GradeGuide REC, including end-sem calculation, semester GPA, and CGPA tracking, occur entirely within your web browser. No calculation inputs or results are transmitted to or stored on remote servers, ensuring complete local privacy and control over your academic data.</p>
-              <p>Any data you enter during a session exists only in your current browser instance. Upon closing or refreshing the page, all input values are cleared and no session history is preserved. We encourage users to treat the tool as ephemeral and save any important results offline if needed.</p>
-              <p>Under no circumstances does GradeGuide REC sell, lease, or share your name and department data to third parties, advertisers, or external organizations. We do not employ tracking cookies, external analytics, or user profiling technologies beyond the minimal research scope outlined above.</p>
-              <p>By using GradeGuide REC, you acknowledge and agree to this policy. If you have questions, suggestions, or concerns regarding your privacy, please reach out via the contact links in this footer. Thank you for choosing GradeGuide REC to support your academic journey.</p>
+            <p style={{justifyContent: 'center'}} >Welcome to GradeGuide REC’s Privacy Policy. Your trust is important to us, and we are committed to maintaining transparency about how this tool operates and handles any information you provide. Please read through this overview to understand what data is collected, how it is processed, and your rights as a user.</p>
+
+<p style={{justifyContent: 'center'}}>This application is designed by a student, for the students of Rajalakshmi Engineering College. GradeGuide REC is an independent project and is not officially affiliated with or endorsed by Rajalakshmi Engineering College (REC) in any capacity. It was created solely to assist fellow students in tracking academic performance more conveniently.</p>
+
+<p style={{justifyContent: 'center'}}>The only personal information collected and stored is your name and department, which are used exclusively for anonymous statistical research and future enhancements. No identifying markers such as roll numbers, email addresses, or contact details are retained.</p>
+
+<p style={{justifyContent: 'center'}}>All computations performed by GradeGuide REC — including end-semester calculation, semester GPA, and CGPA tracking — occur entirely within your web browser. No calculation inputs or results are transmitted to or stored on remote servers, ensuring complete local privacy and control over your academic data.</p>
+
+<p style={{justifyContent: 'center'}}>Any data you enter during a session exists only in your current browser instance. Upon closing or refreshing the page, all input values are cleared and no session history is preserved. We encourage users to treat the tool as ephemeral and save any important results offline if needed.</p>
+
+<p style={{justifyContent: 'center'}}>Under no circumstances does GradeGuide REC sell, lease, or share your name and department data with third parties, advertisers, or external organizations. We do not employ tracking cookies, external analytics, or user profiling technologies beyond the minimal research scope outlined above.</p>
+
+<p style={{justifyContent: 'center'}}>By using GradeGuide REC, you acknowledge and agree to this policy. If you have questions, suggestions, or concerns regarding your privacy, please reach out via the contact links in this footer. Thank you for choosing GradeGuide REC to support your academic journey.</p>
             </div>
           </div>
         </div>

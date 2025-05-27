@@ -32,18 +32,33 @@ interface EndSemInputs {
 const viewLabels: Record<string, string> = { gpa: 'GPA', cgpa: 'CGPA', endSem: 'End-Sem' };
 
 const HistoryPage: React.FC<HistoryPageProps> = ({ onBack }) => {
-  const { history, clearHistory } = useAppContext();
+  const { history, clearHistory, addHistory } = useAppContext();
   const [filter, setFilter] = useState<'all' | 'gpa' | 'cgpa' | 'endSem'>('all');
+
+  const deleteHistoryItem = (id: string) => {
+    const updatedHistory = history.filter(item => item.id !== id);
+    // Update the history in the context
+    localStorage.setItem('rec_history', JSON.stringify(updatedHistory));
+    // Force context update by clearing and re-adding all items
+    clearHistory();
+    updatedHistory.forEach(item => addHistory(item));
+  };
 
   const formattedHistory = useMemo(() => {
     const filtered = history.filter(item => 
       filter === 'all' ? true : item.view === filter
     );
     
-    return filtered.map(item => ({
-      ...item,
-      date: new Date(item.timestamp).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })
-    }));
+    return filtered
+      .map(item => ({
+        ...item,
+        date: new Date(item.timestamp),
+        formattedDate: new Date(item.timestamp).toLocaleString(undefined, { 
+          dateStyle: 'medium', 
+          timeStyle: 'short' 
+        })
+      }))
+      .sort((a, b) => b.date.getTime() - a.date.getTime()); // Sort by newest first
   }, [history, filter]);
 
   return (
@@ -118,20 +133,34 @@ const HistoryPage: React.FC<HistoryPageProps> = ({ onBack }) => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
             {formattedHistory.map(item => (
               <div key={item.id} className="bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden border border-gray-100 flex flex-col h-full min-h-[300px]">
-                <header className="flex justify-between items-center p-5 pb-3 border-b border-gray-100">
+                <header className="flex justify-between items-center p-5 pb-3 border-b border-gray-100 group">
                   <div className="flex items-center">
                     <div className={`w-2.5 h-2.5 rounded-full mr-2 ${
                       item.view === 'gpa' ? 'bg-blue-500' : 
                       item.view === 'cgpa' ? 'bg-purple-500' : 'bg-yellow-500'
                     }`}></div>
-                    <span className="text-sm font-medium text-gray-500">{item.date}</span>
+                    <span className="text-sm font-medium text-gray-500">{item.formattedDate}</span>
                   </div>
-                  <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${
-                    item.view === 'gpa' ? 'bg-blue-50 text-blue-700' : 
-                    item.view === 'cgpa' ? 'bg-purple-50 text-purple-700' : 'bg-yellow-50 text-yellow-700'
-                  }`}>
-                    {viewLabels[item.view] || item.view}
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${
+                      item.view === 'gpa' ? 'bg-blue-50 text-blue-700' : 
+                      item.view === 'cgpa' ? 'bg-purple-50 text-purple-700' : 'bg-yellow-50 text-yellow-700'
+                    }`}>
+                      {viewLabels[item.view] || item.view}
+                    </span>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        deleteHistoryItem(item.id);
+                      }}
+                      className="bg-white text-red-600 rounded-full p-1.5 -mr-1 opacity-100 transition-all duration-200 hover:bg-red-600 hover:text-white hover:scale-110"
+                      title="Delete this entry"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
+                      </svg>
+                    </button>
+                  </div>
                 </header>
                 <section className="p-5 pt-4 text-sm text-gray-800 flex-grow flex flex-col">
                   {item.view === 'gpa' && (

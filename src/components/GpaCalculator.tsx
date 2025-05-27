@@ -129,6 +129,12 @@ const GpaCalculator: React.FC<GpaCalculatorProps> = ({ onBack }) => {
   const calculateResults = () => {
     // Validate inputs
     const isValid = subjects.every(subject => {
+      // Validate subject name
+      if (subject.name.trim().length < 5) {
+        setToastMessage(`Subject name must be at least 5 characters long (${subject.name})`);
+        setShowToast(true);
+        return false;
+      }
       if (subject.isNPTEL) {
         const nptelMark = parseFloat(subject.internal1);
         if (nptelMark > 100) {
@@ -348,9 +354,14 @@ const GpaCalculator: React.FC<GpaCalculatorProps> = ({ onBack }) => {
                         type="text"
                         value={subject.name}
                         onChange={(e) => updateSubject(subject.id, 'name', e.target.value)}
-                        className="mt-1 block w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
-                        placeholder="Enter subject name"
+                        className={`mt-1 block w-full px-4 py-2.5 border ${
+                          subject.name && subject.name.length < 5 ? 'border-red-500' : 'border-gray-300'
+                        } rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500`}
+                        placeholder="Enter the Full subject name "
                       />
+                      {subject.name && subject.name.length < 5 && (
+                        <p className="mt-1 text-sm text-red-600">Enter the Subject Name Correctly</p>
+                      )}
                     </div>
 
                     <div>

@@ -58,11 +58,48 @@ const UserDetailsModal: React.FC<UserDetailsModalProps> = ({
     department: '',
     yearOfStudy: ''
   });
+  const [errors, setErrors] = useState<{name?: string}>({});
+
+  const validateName = (name: string) => {
+    if (name.trim().length < 5) {
+      return 'Enter your Full Name';
+    }
+    if (!/^[a-zA-Z\s]+$/.test(name)) {
+      return 'Name can only contain letters and spaces';
+    }
+    return '';
+  };
+
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+    
+    // Clear error when user starts typing
+    if (name === 'name' && errors.name) {
+      const error = validateName(value);
+      if (!error) {
+        const newErrors = { ...errors };
+        delete newErrors.name;
+        setErrors(newErrors);
+      }
+    }
+  };
 
   const cfg = themeConfig[theme] || themeConfig.blue;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate form
+    const nameError = validateName(formData.name);
+    if (nameError) {
+      setErrors({ name: nameError });
+      return;
+    }
+
     // Send data to Google Sheet via Apps Script
     fetch(SHEET_URL, {
       method: 'POST',
@@ -84,6 +121,7 @@ const UserDetailsModal: React.FC<UserDetailsModalProps> = ({
       department: '',
       yearOfStudy: ''
     });
+    setErrors({});
     onClose();
   };
 
@@ -116,11 +154,21 @@ const UserDetailsModal: React.FC<UserDetailsModalProps> = ({
                 id="name"
                 name="name"
                 value={formData.name}
-                onChange={handleChange}
+                onChange={handleNameChange}
+                onBlur={(e) => {
+                  const error = validateName(e.target.value);
+                  setErrors(prev => ({
+                    ...prev,
+                    name: error
+                  }));
+                }}
                 required
-                className={`block w-full rounded-md border-gray-300 shadow-sm px-4 py-2 ${cfg.inputBg} ${cfg.focusBorder} ${cfg.focusRing} transition-colors duration-200`}
+                className={`block w-full rounded-md ${errors.name ? 'border-red-500' : 'border-gray-300'} shadow-sm px-4 py-2 ${cfg.inputBg} ${errors.name ? 'focus:border-red-500 focus:ring-red-500' : cfg.focusBorder + ' ' + cfg.focusRing} transition-colors duration-200`}
                 placeholder="Enter your full name"
               />
+              {errors.name && (
+                <p className="mt-1 text-sm text-red-600">{errors.name}</p>
+              )}
             </div>
           </div>
 
@@ -140,7 +188,7 @@ const UserDetailsModal: React.FC<UserDetailsModalProps> = ({
                 <option value="">Select Department</option>
                 <option value="AIDS">Artificial Intelligence & Data Science</option>
 <option value="AIML">Artificial Intelligence & Machine Learning</option>
-<option value="aeronautical">Aeronautical Engineering</option>
+<option value="AERO">Aeronautical Engineering</option>
 <option value="AUTO">Automobile Engineering</option>
 <option value="BME">Biomedical Engineering</option>
 <option value="BTE">Biotechnology</option>
